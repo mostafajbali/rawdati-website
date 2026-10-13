@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile authenticated via Firebase Auth",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Parent review and ratings for a nursery with facility photos",
+      "type": "object",
+      "properties": {
+        "nurseryId": { "type": "number" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userAvatar": { "type": "string", "maxLength": 500 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "maxLength": 2000 },
+        "facilityPhotos": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tag": { "type": "string", "maxLength": 100 },
+        "childAgeGroup": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["nurseryId", "userId", "userName", "rating", "comment"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "User saved nurseries list",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "nurseryId": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "nurseryId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile document"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Verified parent reviews with ratings and facility photos"
+    },
+    "/favorites/{favoriteId}": {
+      "schema": { "$ref": "#/entities/Favorite" },
+      "description": "User bookmarked nurseries"
+    }
+  }
+}

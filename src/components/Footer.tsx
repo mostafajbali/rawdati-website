@@ -1,0 +1,186 @@
+import React from 'react';
+import { Language, translations } from '../i18n/translations.ts';
+import { RawdatiLogo } from './RawdatiLogo.tsx';
+
+interface FooterProps {
+  onOpenRegister: () => void;
+  onNavigate: (path: string) => void;
+  onOpenPrograms?: () => void;
+  onOpenReviews?: () => void;
+  lang: Language;
+}
+
+export const Footer: React.FC<FooterProps> = ({
+  onOpenRegister,
+  onNavigate,
+  onOpenPrograms,
+  onOpenReviews,
+  lang
+}) => {
+  const t = translations[lang];
+
+  return (
+    <footer className="w-full bg-[#eff4ff] text-[#3d4947] pt-12 pb-24 lg:pb-8 border-t border-[#00685f]/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pb-8">
+          {/* Column 1: Brand & About */}
+          <div className="space-y-3.5 sm:col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2.5">
+              <RawdatiLogo size={36} />
+              <span className="text-xl font-bold text-[#00685f]">{t.brandName}</span>
+            </div>
+            <p className="text-xs sm:text-sm text-[#3d4947] leading-relaxed">
+              {t.footerBrandDesc}
+            </p>
+            <div className="flex items-center gap-2 pt-1">
+              <a
+                href="#share"
+                aria-label="share"
+                className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#00685f] hover:bg-[#00685f] hover:text-white transition-colors shadow-xs"
+              >
+                <span className="material-symbols-outlined text-[18px]">share</span>
+              </a>
+              <a
+                href="#chat"
+                aria-label="chat"
+                className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#00685f] hover:bg-[#00685f] hover:text-white transition-colors shadow-xs"
+              >
+                <span className="material-symbols-outlined text-[18px]">forum</span>
+              </a>
+              <a
+                href="mailto:support@rawdati.sa"
+                aria-label="mail"
+                className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#00685f] hover:bg-[#00685f] hover:text-white transition-colors shadow-xs"
+              >
+                <span className="material-symbols-outlined text-[18px]">mail</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Column 2: Quick Links */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-[#0b1c30]">{t.quickLinks}</h3>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <button
+                  onClick={() => onNavigate('home')}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.home}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('explore')}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.explore}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onOpenPrograms ? onOpenPrograms() : onNavigate('programs')}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.programs}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('about')}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start font-semibold text-[#00685f]"
+                >
+                  {t.aboutUs}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onOpenReviews ? onOpenReviews() : onNavigate('reviews')}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.reviewsNav}
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: For Nurseries */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-[#0b1c30]">{t.forCenters}</h3>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <button
+                  onClick={onOpenRegister}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.joinAsPartner}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={onOpenRegister}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.dashboard}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={onOpenRegister}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.officialStandards}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={onOpenRegister}
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
+                >
+                  {t.adPackages}
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Support */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-[#0b1c30]">{t.contactAndSupport}</h3>
+            <ul className="space-y-2 text-xs">
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#00685f] text-[18px]">call</span>
+                <span className="font-mono">800-RAWDA-00</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#00685f] text-[18px]">mail</span>
+                <span>support@rawdati.sa</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#00685f] text-[18px]">location_on</span>
+                <span>{lang === 'ar' ? 'المملكة العربية السعودية' : 'Kingdom of Saudi Arabia'}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Sub-footer Copyright */}
+        <div className="pt-6 border-t border-[#bcc9c6]/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-start">
+          <p className="text-xs text-[#6d7a77]">
+            {t.allRightsReserved}
+          </p>
+          <div className="flex items-center gap-4 text-xs text-[#6d7a77]">
+            <a href="#privacy" className="hover:text-[#00685f] transition-colors">
+              {t.privacyPolicy}
+            </a>
+            <a href="#terms" className="hover:text-[#00685f] transition-colors">
+              {t.termsConditions}
+            </a>
+            <a href="#faq" className="hover:text-[#00685f] transition-colors">
+              {t.faq}
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};

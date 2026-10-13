@@ -1,0 +1,262 @@
+export type Language = 'ar' | 'en';
+
+export const translations = {
+  ar: {
+    // Brand & Header
+    brandName: 'روضتي',
+    brandTagline: 'دليل الحضانات المعتمد',
+    home: 'الرئيسية',
+    aboutUs: 'من نحن',
+    explore: 'استكشف الحضانات',
+    programs: 'البرامج التعليمية',
+    reviewsNav: 'الآراء والتجارب',
+    forNurseries: 'للمراكز والحضانات',
+    registerNurseryCTA: '+ سجّل حضانتك',
+    login: 'تسجيل الدخول',
+    myAccount: 'حسابي',
+    langToggle: 'EN',
+
+    // Hero Section
+    officialBadge: 'المنصة الرسمية المعتمدة لاختيار دور الحضانة بالـمملكة',
+    heroTitlePrefix: 'ابحثي عن ',
+    heroTitleHighlight: 'الحضانة المثالية',
+    heroTitleSuffix: ' لطفلك بكل أمان وثقة',
+    heroSubtitle: 'منصة روضتي تساعدك في استكشاف ومقارنة أفضل دور الحضانة ورياض الأطفال المعتمدة بالقرب منك في المملكة مع جولات واقعية وتقييمات أولياء الأمور الموثقة.',
+    badgeCertified: '+500 حضانة معتمدة',
+    badgeReviews: 'تقييمات موثوقة من الأمهات',
+    badgeFreeTour: 'حجز زيارة مجانية',
+
+    // Search Bar
+    searchKeywordLabel: 'اسم الحضانة أو الكلمات المفتاحية',
+    searchKeywordPlaceholder: 'مثال: حضانة براعم المستقبل...',
+    searchCityLabel: 'المدينة أو المنطقة',
+    searchCityAll: 'جميع المدن والمناطق',
+    searchBudgetLabel: 'الحد الأقصى للميزانية',
+    searchBudgetNone: 'بدون حد أقصى',
+    searchBudgetUpTo: 'حتى',
+    searchBudgetAbove: 'أكثر من',
+    searchSubmitBtn: 'بحث عن حضانة',
+    popularTagsLabel: 'الوسوم الشائعة:',
+
+    // Quick tags
+    tagCertified: 'حضانات معتمدة من وزارة التعليم',
+    tagInfants: 'تقبل الرضّع (أقل من سنة)',
+    tagCctv: 'كاميرات مراقبة مباشرة',
+    tagMontessori: 'منهج منتسوري',
+    tagExtendedHours: 'دوام مسائي',
+
+    // Directory Bar & Controls
+    showingCount: 'عرض',
+    outOf: 'من أصل',
+    nurseriesAvailable: 'حضانة متوفرة',
+    sortByLabel: 'الترتيب حسب:',
+    sortHighestRated: 'الأعلى تقييماً ★',
+    sortClosest: 'الأقرب إليك موقعاً',
+    sortLowestPrice: 'الأقل سعراً',
+    sortMostPopular: 'الأكثر طلباً وحجزاً',
+    viewGrid: 'شبكة',
+    viewMap: 'خريطة',
+    filterBtn: 'تصفية',
+
+    // Sidebar Filters
+    filterTitle: 'تصفية النتائج',
+    filterReset: 'إعادة تعيين',
+    monthlyBudgetRange: 'نطاق السعر الشهري (ر.س)',
+    starRatings: 'تصنيف النجوم والتقييم',
+    fiveStars: '5.0 نجوم',
+    fourPlusStars: '4.0 نجوم وأكثر',
+    threePlusStars: '3.0 نجوم وأكثر',
+    ageGroupTitle: 'الفئة العمرية',
+    infantsAge: 'رضّع (حديثي الولادة حتى سنة)',
+    toddlersAge: 'براعم صغار (1 - 3 سنوات)',
+    preschoolAge: 'رياض أطفال تمهيدي (3 - 5 سنوات)',
+    afterschoolAge: 'رعاية بعد المدرسة',
+    curriculumTitle: 'المنهج التعليمي',
+    curriculumNational: 'المنهج الوطني المطور',
+    curriculumMontessori: 'منتسوري (Montessori)',
+    curriculumBilingual: 'ثنائي اللغة (عربي / إنجليزي)',
+    curriculumReggio: 'منهج ريجيو إميليا',
+    curriculumQuran: 'تحفيظ القرآن المبكر',
+    amenitiesTitle: 'المرافق والخدمات',
+    amenityCctv: 'كاميرات بث مباشر للأهل',
+    amenityFood: 'وجبات غذائية صحية وعضوية',
+    amenityPool: 'مسبح وألعاب مائية آمنة',
+    amenityNurse: 'عيادة وممرضة مقيمة',
+    amenityTransport: 'خدمة نقل وتوصيل آمن',
+    operatingHoursTitle: 'أوقات وساعات الدوام',
+    hoursMorning: 'دوام صباحي (7 ص - 1 م)',
+    hoursExtended: 'دوام ممتد حتى 5 مساءً',
+    hoursWeekend: 'رعاية عطلة نهاية الأسبوع',
+    applyFilterBtn: 'تطبيق التصفية',
+
+    // Cards
+    estimatedTuition: 'الرسوم التقديرية',
+    perMonth: 'ر.س / شهرياً',
+    bookTourBtn: 'حجز جولة تعريفية',
+    kmAway: 'على بعد',
+    noNurseriesFound: 'لم يتم العثور على حضانات مطابقة للتصفية',
+    resetFiltersPrompt: 'جربي توسيع نطاق السعر أو تغيير خيارات المناهج والمرافق لعرض المزيد.',
+    resetFiltersBtn: 'إعادة تعيين خيارات التصفية',
+
+    // Pagination
+    previousPage: 'الصفحة السابقة',
+    nextPage: 'الصفحة التالية',
+    viewMoreNurseries: 'عرض المزيد من الحضانات المعتمدة',
+    inspectionFooterNote: 'جميع الحضانات تخضع للتحقق الميداني والترخيص الرسمي من وزارة التعليم',
+
+    // Reassurance Banner
+    advisorSupport: 'مستشارو روضتي معك خطوة بخطوة',
+    confusedTitle: 'هل تشعرين بالحيرة في اختيار الحضانة الأنسب لطفلك؟',
+    confusedDesc: 'فريقنا من أخصائيي رعاية الطفولة المبكرة يقدم لك استشارة هاتفية مجانية لمساعدتك في المفاضلة حسب ميزانيتك وموقعك واحتياجات طفلك.',
+    bookFreeConsultation: 'احجزي استشارة مجانية الآن',
+
+    // Footer
+    footerBrandDesc: 'المنصة الأولى المعتمدة لمساعدة الآباء في اكتشاف واختيار أفضل الحضانات ومراكز الطفولة المبكرة بكل ثقة وراحة بال.',
+    quickLinks: 'روابط سريعة',
+    forCenters: 'للمراكز والحضانات',
+    joinAsPartner: 'انضم كشريك تعليمي',
+    dashboard: 'لوحة إدارة الحضانة',
+    officialStandards: 'المعايير والاعتماد الرسمي',
+    adPackages: 'باقات التسجيل الإعلاني',
+    contactAndSupport: 'تواصل ودعم',
+    allRightsReserved: 'جميع الحقوق محفوظة لمنصة روضتي © 2025',
+    privacyPolicy: 'سياسة الخصوصية',
+    termsConditions: 'الشروط والأحكام',
+    faq: 'الأسئلة الشائعة',
+
+    // Mobile Nav
+    mobileHome: 'الرئيسية',
+    mobileSearch: 'بحث',
+    mobileFavorites: 'المفضلة',
+    mobileAccount: 'حسابي'
+  },
+  en: {
+    // Brand & Header
+    brandName: 'Rawdati',
+    brandTagline: 'Certified Nursery Directory',
+    home: 'Home',
+    aboutUs: 'About Us',
+    explore: 'Explore Nurseries',
+    programs: 'Educational Programs',
+    reviewsNav: 'Reviews & Stories',
+    forNurseries: 'For Centers & Nurseries',
+    registerNurseryCTA: '+ Register Nursery',
+    login: 'Sign In',
+    myAccount: 'My Account',
+    langToggle: 'عربي',
+
+    // Hero Section
+    officialBadge: 'The Official Certified Directory for Nurseries in Saudi Arabia',
+    heroTitlePrefix: 'Find the ',
+    heroTitleHighlight: 'Ideal Nursery',
+    heroTitleSuffix: ' for Your Child with Peace of Mind',
+    heroSubtitle: 'Rawdati helps you explore, compare, and book the top certified nurseries and preschools near you in the Kingdom with authentic virtual tours and verified parent reviews.',
+    badgeCertified: '+500 Certified Nurseries',
+    badgeReviews: 'Trusted Mother Reviews',
+    badgeFreeTour: 'Free Visit Booking',
+
+    // Search Bar
+    searchKeywordLabel: 'Nursery Name or Keywords',
+    searchKeywordPlaceholder: 'e.g., Future Sprouts Nursery...',
+    searchCityLabel: 'City or Region',
+    searchCityAll: 'All Cities & Regions',
+    searchBudgetLabel: 'Maximum Monthly Budget',
+    searchBudgetNone: 'No Maximum Limit',
+    searchBudgetUpTo: 'Up to',
+    searchBudgetAbove: 'More than',
+    searchSubmitBtn: 'Find Nursery',
+    popularTagsLabel: 'Popular Tags:',
+
+    // Quick tags
+    tagCertified: 'Ministry of Education Certified',
+    tagInfants: 'Accepts Infants (< 1 year)',
+    tagCctv: 'Live Streaming CCTV',
+    tagMontessori: 'Montessori Curriculum',
+    tagExtendedHours: 'Evening / Extended Hours',
+
+    // Directory Bar & Controls
+    showingCount: 'Showing',
+    outOf: 'of',
+    nurseriesAvailable: 'nurseries available',
+    sortByLabel: 'Sort by:',
+    sortHighestRated: 'Highest Rated ★',
+    sortClosest: 'Closest to You',
+    sortLowestPrice: 'Lowest Price',
+    sortMostPopular: 'Most In-Demand',
+    viewGrid: 'Grid',
+    viewMap: 'Map',
+    filterBtn: 'Filter',
+
+    // Sidebar Filters
+    filterTitle: 'Filter Results',
+    filterReset: 'Reset All',
+    monthlyBudgetRange: 'Monthly Budget Range (SAR)',
+    starRatings: 'Star Ratings & Reviews',
+    fiveStars: '5.0 Stars',
+    fourPlusStars: '4.0 Stars & Above',
+    threePlusStars: '3.0 Stars & Above',
+    ageGroupTitle: 'Age Group',
+    infantsAge: 'Infants (Newborn to 1 year)',
+    toddlersAge: 'Toddlers (1 - 3 years)',
+    preschoolAge: 'Preschool (3 - 5 years)',
+    afterschoolAge: 'After-School Care',
+    curriculumTitle: 'Educational Curriculum',
+    curriculumNational: 'National Developed Curriculum',
+    curriculumMontessori: 'Montessori Method',
+    curriculumBilingual: 'Bilingual (Arabic / English)',
+    curriculumReggio: 'Reggio Emilia Approach',
+    curriculumQuran: 'Early Quran Memorization',
+    amenitiesTitle: 'Amenities & Facilities',
+    amenityCctv: 'Live Parent Video Stream',
+    amenityFood: 'Organic & Healthy Meals',
+    amenityPool: 'Safe Swimming & Splash Play',
+    amenityNurse: 'Resident Nurse & Clinic',
+    amenityTransport: 'Safe School Transportation',
+    operatingHoursTitle: 'Working Hours',
+    hoursMorning: 'Morning Shift (7 AM - 1 PM)',
+    hoursExtended: 'Extended Shift (up to 5 PM)',
+    hoursWeekend: 'Weekend Childcare',
+    applyFilterBtn: 'Apply Filters',
+
+    // Cards
+    estimatedTuition: 'Estimated Tuition',
+    perMonth: 'SAR / month',
+    bookTourBtn: 'Book Free Tour',
+    kmAway: 'away',
+    noNurseriesFound: 'No nurseries match your current filters',
+    resetFiltersPrompt: 'Try expanding your price range or adjusting curriculum choices to view more centers.',
+    resetFiltersBtn: 'Reset Search Filters',
+
+    // Pagination
+    previousPage: 'Previous',
+    nextPage: 'Next',
+    viewMoreNurseries: 'View More Certified Nurseries',
+    inspectionFooterNote: 'All nurseries undergo field verification and official licensing by the Ministry of Education',
+
+    // Reassurance Banner
+    advisorSupport: 'Rawdati Advisors With You Step by Step',
+    confusedTitle: 'Need Help Choosing the Best Nursery for Your Child?',
+    confusedDesc: 'Our early childhood education specialists offer a complimentary phone consultation to help you evaluate centers based on your budget, location, and child needs.',
+    bookFreeConsultation: 'Book Free Consultation',
+
+    // Footer
+    footerBrandDesc: 'The leading trusted platform helping parents discover and choose the finest nurseries and early childhood centers with complete peace of mind.',
+    quickLinks: 'Quick Links',
+    forCenters: 'For Centers & Nurseries',
+    joinAsPartner: 'Join as Education Partner',
+    dashboard: 'Nursery Management Portal',
+    officialStandards: 'Standards & Licensing',
+    adPackages: 'Featured Registration Plans',
+    contactAndSupport: 'Contact & Support',
+    allRightsReserved: 'All rights reserved © Rawdati 2025',
+    privacyPolicy: 'Privacy Policy',
+    termsConditions: 'Terms & Conditions',
+    faq: 'FAQ',
+
+    // Mobile Nav
+    mobileHome: 'Home',
+    mobileSearch: 'Search',
+    mobileFavorites: 'Favorites',
+    mobileAccount: 'Account'
+  }
+};
