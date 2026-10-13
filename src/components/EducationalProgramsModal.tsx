@@ -1,5 +1,6 @@
 import React from 'react';
 import { Language, translations } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface EducationalProgramsModalProps {
   isOpen: boolean;
@@ -101,7 +102,7 @@ export const EducationalProgramsModal: React.FC<EducationalProgramsModalProps> =
         <div className="bg-[#00685f] p-5 sm:p-6 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[24px]">school</span>
+              <AppIcon name="school" className="w-6 h-6 text-white" />
             </div>
             <div>
               <h3 className="text-base sm:text-xl font-bold">
@@ -118,7 +119,7 @@ export const EducationalProgramsModal: React.FC<EducationalProgramsModalProps> =
             onClick={onClose}
             className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <AppIcon name="close" className="w-5 h-5 text-white" />
           </button>
         </div>
 
@@ -132,7 +133,7 @@ export const EducationalProgramsModal: React.FC<EducationalProgramsModalProps> =
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <span className="w-9 h-9 rounded-xl bg-[#00685f]/15 text-[#00685f] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[20px]">{prog.icon}</span>
+                    <AppIcon name={prog.icon} className="w-5 h-5 text-[#00685f]" />
                   </span>
                   <div>
                     <h4 className="text-sm sm:text-base font-bold text-[#0b1c30]">
@@ -160,7 +161,7 @@ export const EducationalProgramsModal: React.FC<EducationalProgramsModalProps> =
                     key={bIdx}
                     className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#00685f] bg-white px-2.5 py-1 rounded-lg border border-[#e5eeff]"
                   >
-                    <span className="material-symbols-outlined text-[14px]">check</span>
+                    <AppIcon name="check" className="w-3.5 h-3.5" />
                     <span>{b}</span>
                   </span>
                 ))}
@@ -176,7 +177,7 @@ export const EducationalProgramsModal: React.FC<EducationalProgramsModalProps> =
                   }}
                   className="px-4 py-2 rounded-xl bg-[#00685f] hover:bg-[#008378] text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
                 >
-                  <span className="material-symbols-outlined text-[16px]">search</span>
+                  <AppIcon name="search" className="w-4 h-4" />
                   <span>
                     {isAr
                       ? `استعراض الحضانات التي تقدم هذا المنهج`

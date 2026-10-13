@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Nursery } from '../types.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface MapViewProps {
   nurseries: Nursery[];
@@ -87,14 +88,12 @@ export const MapView: React.FC<MapViewProps> = ({
                       : 'bg-white text-[#0b1c30] hover:scale-105 hover:bg-[#eff4ff]'
                   }`}
                 >
-                  <span
-                    className={`material-symbols-outlined text-[16px] ${
+                  <AppIcon
+                    name="location_on"
+                    className={`w-4 h-4 ${
                       isSelected ? 'text-[#fea619]' : 'text-[#00685f]'
                     }`}
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    location_on
-                  </span>
+                  />
                   <span className="truncate max-w-[110px]">{n.name}</span>
                   <span className="text-[10px] opacity-80">{n.price} ر.س</span>
                 </button>
@@ -105,14 +104,14 @@ export const MapView: React.FC<MapViewProps> = ({
 
         {/* Map Controls */}
         <div className="absolute bottom-4 left-4 z-20 flex flex-col gap-1 bg-white/90 backdrop-blur-md rounded-2xl p-1 shadow-sm border border-[#e5eeff]">
-          <button className="w-8 h-8 rounded-xl flex items-center justify-center text-[#3d4947] hover:bg-[#eff4ff] cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">add</span>
+          <button className="w-8 h-8 rounded-xl flex items-center justify-center text-[#3d4947] hover:bg-[#eff4ff] cursor-pointer text-base font-bold">
+            +
           </button>
-          <button className="w-8 h-8 rounded-xl flex items-center justify-center text-[#3d4947] hover:bg-[#eff4ff] cursor-pointer">
-            <span className="material-symbols-outlined text-[18px]">remove</span>
+          <button className="w-8 h-8 rounded-xl flex items-center justify-center text-[#3d4947] hover:bg-[#eff4ff] cursor-pointer text-base font-bold">
+            -
           </button>
           <button className="w-8 h-8 rounded-xl flex items-center justify-center text-[#00685f] hover:bg-[#eff4ff] cursor-pointer" title="تحديد موقعي">
-            <span className="material-symbols-outlined text-[18px]">my_location</span>
+            <AppIcon name="location_on" className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -133,9 +132,7 @@ export const MapView: React.FC<MapViewProps> = ({
                 </div>
               )}
               <div className="absolute bottom-2.5 right-2.5 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded-lg flex items-center gap-1 text-xs font-bold text-[#0b1c30]">
-                <span className="material-symbols-outlined text-[#fea619] text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  star
-                </span>
+                <AppIcon name="star" className="w-3.5 h-3.5 text-[#fea619]" filled />
                 <span>{selectedPin.rating.toFixed(1)}</span>
                 <span className="text-[#6d7a77]">({selectedPin.reviewsCount})</span>
               </div>
@@ -144,7 +141,7 @@ export const MapView: React.FC<MapViewProps> = ({
             <div>
               <h3 className="text-lg font-bold text-[#0b1c30]">{selectedPin.name}</h3>
               <p className="text-xs text-[#6d7a77] mt-1 flex items-center gap-1">
-                <span className="material-symbols-outlined text-[#00685f] text-[16px]">location_on</span>
+                <AppIcon name="location_on" className="w-4 h-4 text-[#00685f]" />
                 <span>{selectedPin.cityName}، {selectedPin.district} - تبعد {selectedPin.distance}</span>
               </p>
             </div>
@@ -184,7 +181,7 @@ export const MapView: React.FC<MapViewProps> = ({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center py-10 text-[#6d7a77]">
-            <span className="material-symbols-outlined text-[36px] text-[#00685f] mb-2">map</span>
+            <AppIcon name="map" className="w-9 h-9 text-[#00685f] mb-2" />
             <p className="text-sm">انقري على أي حضانة على الخريطة لعرض تفاصيلها وموقعها الدقيق</p>
           </div>
         )}

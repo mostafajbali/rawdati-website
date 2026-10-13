@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AppIcon } from './AppIcon.tsx';
 
 interface RegisterNurseryModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
         <div className="bg-[#fea619] p-5 text-[#684000] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-full bg-[#684000]/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[24px]">school</span>
+              <AppIcon name="school" className="w-6 h-6 text-[#684000]" />
             </div>
             <div>
               <h3 className="font-bold text-base sm:text-lg">تسجيل مركز أو حضانة جديدة</h3>
@@ -42,7 +43,7 @@ export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <AppIcon name="close" className="w-4 h-4 text-[#684000]" />
           </button>
         </div>
 
@@ -50,7 +51,7 @@ export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
           {submitted ? (
             <div className="text-center py-6 space-y-3">
               <div className="w-14 h-14 rounded-full bg-[#00685f]/15 text-[#00685f] mx-auto flex items-center justify-center">
-                <span className="material-symbols-outlined text-[32px]">task_alt</span>
+                <AppIcon name="task_alt" className="w-8 h-8 text-[#00685f]" />
               </div>
               <h4 className="text-lg font-bold text-[#0b1c30]">تم استلام طلب انضمام المركز بنجاح!</h4>
               <p className="text-xs text-[#3d4947] max-w-sm mx-auto leading-relaxed">

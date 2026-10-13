@@ -11,6 +11,7 @@ import {
   OperationType
 } from '../lib/firebase.ts';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { AppIcon } from './AppIcon.tsx';
 
 interface NurseryReviewsSectionProps {
   nursery: Nursery;
@@ -184,15 +185,14 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
               <span className="text-3xl font-extrabold text-[#00685f] leading-none">
                 {nursery.rating.toFixed(1)}
               </span>
-              <div className="flex text-[#fea619] mt-1">
+              <div className="flex text-[#fea619] mt-1 gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
-                  <span
+                  <AppIcon
                     key={s}
-                    className="material-symbols-outlined text-[13px]"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    star
-                  </span>
+                    name="star"
+                    className="w-3.5 h-3.5 text-[#fea619]"
+                    filled
+                  />
                 ))}
               </div>
               <span className="text-[10px] text-[#6d7a77] mt-0.5">من 5.0</span>
@@ -207,11 +207,11 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
               </p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#00685f] bg-white px-2.5 py-0.5 rounded-full shadow-xs">
-                  <span className="material-symbols-outlined text-[14px]">verified</span>
+                  <AppIcon name="verified" className="w-3.5 h-3.5 text-[#00685f]" filled />
                   <span>100% مراجعات حقيقية</span>
                 </span>
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#855300] bg-[#ffddb8]/60 px-2.5 py-0.5 rounded-full shadow-xs">
-                  <span className="material-symbols-outlined text-[14px]">photo_camera</span>
+                  <AppIcon name="photo_camera" className="w-3.5 h-3.5 text-[#855300]" />
                   <span>صور مرافق موثقة</span>
                 </span>
               </div>
@@ -247,16 +247,14 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
         {/* Specific Quality Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-5 mt-5 border-t border-[#e5eeff]">
           {[
-            { label: 'النظافة والسلامة', score: '4.9 ★', icon: 'sanitizer' },
+            { label: 'النظافة والسلامة', score: '4.9 ★', icon: 'sparkles' },
             { label: 'كفاءة المعلمات', score: '4.9 ★', icon: 'school' },
             { label: 'جودة التغذية', score: '4.8 ★', icon: 'restaurant' },
             { label: 'الكاميرات والتواصل', score: '5.0 ★', icon: 'videocam' }
           ].map((metric, i) => (
             <div key={i} className="bg-white/80 p-2.5 rounded-2xl flex items-center justify-between text-xs">
               <div className="flex items-center gap-1.5 text-[#3d4947]">
-                <span className="material-symbols-outlined text-[16px] text-[#00685f]">
-                  {metric.icon}
-                </span>
+                <AppIcon name={metric.icon} className="w-4 h-4 text-[#00685f]" />
                 <span>{metric.label}</span>
               </div>
               <span className="font-bold text-[#00685f]">{metric.score}</span>
@@ -269,9 +267,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
       <div className="space-y-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#00685f] text-[20px]">
-              photo_library
-            </span>
+            <AppIcon name="photo_camera" className="w-5 h-5 text-[#00685f]" />
             <h4 className="text-sm font-bold text-[#0b1c30]">
               صور مرافق الحضانة (من تصوير وزيارات الأهالي)
             </h4>
@@ -327,7 +323,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                 </span>
               </div>
               <div className="absolute top-2 left-2 w-6 h-6 rounded-full bg-black/40 backdrop-blur-xs text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined text-[14px]">zoom_in</span>
+                <AppIcon name="zoom_in" className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
           ))}
@@ -373,7 +369,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
           onClick={() => setShowAddForm(!showAddForm)}
           className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] text-xs font-bold shadow-xs cursor-pointer active:scale-95 transition-all"
         >
-          <span className="material-symbols-outlined text-[16px]">rate_review</span>
+          <AppIcon name="rate_review" className="w-4 h-4 text-[#684000]" />
           <span>{showAddForm ? 'إخفاء النموذج' : 'أضيفي مراجعتك'}</span>
         </button>
       </div>
@@ -383,7 +379,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
         <div className="bg-white p-5 rounded-3xl border-2 border-[#00685f]/30 shadow-md animate-in slide-in-from-top duration-200">
           <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#e5eeff]">
             <h4 className="text-sm font-bold text-[#00685f] flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">edit_note</span>
+              <AppIcon name="edit_note" className="w-4 h-4 text-[#00685f]" />
               <span>مشاركة تجربة ولي أمر مع {nursery.name}</span>
             </h4>
             {currentUser && (
@@ -397,7 +393,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
           {!currentUser ? (
             <div className="text-center py-6 space-y-3 bg-[#eff4ff] rounded-2xl p-4">
               <div className="w-12 h-12 rounded-full bg-white text-[#00685f] mx-auto flex items-center justify-center shadow-xs">
-                <span className="material-symbols-outlined text-[24px]">lock</span>
+                <AppIcon name="lock" className="w-6 h-6 text-[#00685f]" />
               </div>
               <h5 className="font-bold text-sm text-[#0b1c30]">
                 تسجيل الدخول مطلوب لإضافة مراجعة موثقة
@@ -435,7 +431,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
             <form onSubmit={handleSubmitReview} className="space-y-4">
               {submitSuccess && (
                 <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                  <AppIcon name="check_circle" className="w-4 h-4 text-emerald-600" filled />
                   <span>تم نشر مراجعتك بنجاح وحفظها في قاعدة البيانات! شكراً لمشاركتك.</span>
                 </div>
               )}
@@ -451,16 +447,15 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                       key={star}
                       type="button"
                       onClick={() => setNewRating(star)}
-                      className="cursor-pointer transition-transform hover:scale-110"
+                      className="cursor-pointer transition-transform hover:scale-110 p-0.5"
                     >
-                      <span
-                        className={`material-symbols-outlined text-[26px] ${
+                      <AppIcon
+                        name="star"
+                        className={`w-6 h-6 ${
                           star <= newRating ? 'text-[#fea619]' : 'text-[#bcc9c6]'
                         }`}
-                        style={{ fontVariationSettings: star <= newRating ? "'FILL' 1" : "'FILL' 0" }}
-                      >
-                        star
-                      </span>
+                        filled={star <= newRating}
+                      />
                     </button>
                   ))}
                   <span className="text-xs font-bold text-[#00685f] mr-2">
@@ -543,7 +538,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                         </span>
                         {isSelected && (
                           <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-[#00685f] text-white flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[14px]">check</span>
+                            <AppIcon name="check" className="w-3.5 h-3.5" />
                           </div>
                         )}
                       </div>
@@ -559,7 +554,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                   disabled={isSubmitting || !newComment.trim()}
                   className="px-6 py-2.5 rounded-2xl bg-[#00685f] hover:bg-[#008378] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50 active:scale-95 flex items-center gap-1.5"
                 >
-                  <span className="material-symbols-outlined text-[18px]">send</span>
+                  <AppIcon name="send" className="w-4 h-4" />
                   <span>{isSubmitting ? 'جاري النشر...' : 'نشر التقييم'}</span>
                 </button>
                 <button
@@ -579,7 +574,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
       <div className="space-y-4">
         {filteredReviewsList.length === 0 ? (
           <div className="text-center py-8 bg-[#eff4ff] rounded-2xl p-4 text-[#6d7a77]">
-            <span className="material-symbols-outlined text-[32px] text-[#00685f]">rate_review</span>
+            <AppIcon name="rate_review" className="w-8 h-8 text-[#00685f] mx-auto" />
             <p className="text-xs font-bold text-[#0b1c30] mt-1">لا توجد مراجعات مطابقة للتصفية المحددة</p>
           </div>
         ) : (
@@ -628,12 +623,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
 
                 {/* Star Rating on Card */}
                 <div className="flex items-center gap-1 bg-white px-2.5 py-1 rounded-xl border border-[#e5eeff] shadow-xs">
-                  <span
-                    className="material-symbols-outlined text-[#fea619] text-[16px]"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    star
-                  </span>
+                  <AppIcon name="star" className="w-3.5 h-3.5 text-[#fea619]" filled />
                   <span className="text-xs font-bold text-[#0b1c30]">{rev.rating.toFixed(1)}</span>
                 </div>
               </div>
@@ -647,9 +637,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
               {rev.facilityPhotos && rev.facilityPhotos.length > 0 && (
                 <div className="space-y-1.5 pt-1">
                   <span className="text-[11px] font-bold text-[#6d7a77] flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px] text-[#00685f]">
-                      photo_camera
-                    </span>
+                    <AppIcon name="photo_camera" className="w-3.5 h-3.5 text-[#00685f]" />
                     <span>صور مرافق أرفقها ولي الأمر:</span>
                   </span>
                   <div className="flex flex-wrap gap-2">
@@ -671,7 +659,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                          <span className="material-symbols-outlined text-[18px]">zoom_in</span>
+                          <AppIcon name="zoom_in" className="w-4 h-4" />
                         </div>
                       </div>
                     ))}
@@ -689,7 +677,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                   onClick={() => handleHelpfulClick(rev.id)}
                   className="flex items-center gap-1 px-3 py-1 rounded-full bg-white hover:bg-[#eff4ff] text-[#00685f] border border-[#e5eeff] text-xs font-bold transition-colors cursor-pointer active:scale-95"
                 >
-                  <span className="material-symbols-outlined text-[15px]">thumb_up</span>
+                  <AppIcon name="thumb_up" className="w-3.5 h-3.5" />
                   <span>مفيدة ({rev.helpfulCount || 0})</span>
                 </button>
               </div>
@@ -719,7 +707,7 @@ export const NurseryReviewsSection: React.FC<NurseryReviewsSectionProps> = ({ nu
                 onClick={() => setActivePhotoModal(null)}
                 className="absolute top-3 left-3 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/90 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[20px]">close</span>
+                <AppIcon name="close" className="w-5 h-5 text-white" />
               </button>
             </div>
             <div className="p-4 sm:p-5 bg-white space-y-1">

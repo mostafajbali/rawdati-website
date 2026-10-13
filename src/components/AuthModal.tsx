@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { signInWithGoogle, FirebaseUser } from '../lib/firebase.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -55,7 +56,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="bg-[#00685f] p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[18px]">person</span>
+              <AppIcon name="person" className="w-4 h-4 text-white" />
             </div>
             <h3 className="font-bold text-sm sm:text-base">
               {currentUser ? 'الملف الشخصي' : 'تسجيل الدخول إلى روضتي'}
@@ -65,7 +66,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <AppIcon name="close" className="w-4 h-4 text-white" />
           </button>
         </div>
 
@@ -159,7 +160,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 onClick={() => setStep('phone')}
                 className="w-full py-2.5 rounded-2xl bg-[#eff4ff] hover:bg-[#e5eeff] text-[#00685f] text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <span className="material-symbols-outlined text-[16px]">smartphone</span>
+                <AppIcon name="phone" className="w-4 h-4 text-[#00685f]" />
                 <span>تسجيل الدخول برقم الجوال السعودي</span>
               </button>
             </div>
@@ -231,7 +232,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           ) : (
             <div className="text-center py-4 space-y-3">
               <div className="w-12 h-12 rounded-full bg-[#89f5e7]/40 text-[#00685f] mx-auto flex items-center justify-center">
-                <span className="material-symbols-outlined text-[28px]">check</span>
+                <AppIcon name="check" className="w-7 h-7 text-[#00685f]" />
               </div>
               <h4 className="font-bold text-[#0b1c30] text-sm">مرحباً بك في روضتي!</h4>
               <p className="text-xs text-[#6d7a77]">تم تسجيل دخولك بنجاح.</p>

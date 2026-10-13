@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FirebaseUser } from '../lib/firebase.ts';
 import { Language, translations } from '../i18n/translations.ts';
 import { RawdatiLogo } from './RawdatiLogo.tsx';
+import { AppIcon } from './AppIcon.tsx';
 
 interface HeaderProps {
   lang: Language;
@@ -104,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
               title={isAr ? 'Switch to English' : 'التحويل إلى العربية'}
             >
               <span>{t.langToggle}</span>
-              <span className="material-symbols-outlined text-[15px] sm:text-[16px]">language</span>
+              <AppIcon name="language" className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00685f]" />
             </button>
 
             {/* Favorites Icon Button */}
@@ -114,12 +115,11 @@ export const Header: React.FC<HeaderProps> = ({
               title={t.mobileFavorites}
               aria-label={t.mobileFavorites}
             >
-              <span
-                className="material-symbols-outlined text-[18px] sm:text-[20px]"
-                style={{ fontVariationSettings: favoritesCount > 0 ? "'FILL' 1" : "'FILL' 0" }}
-              >
-                favorite
-              </span>
+              <AppIcon
+                name="favorite"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-[#00685f]"
+                filled={favoritesCount > 0}
+              />
               {favoritesCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#fea619] text-[#684000] text-[10px] sm:text-[11px] font-bold flex items-center justify-center shadow-xs">
                   {favoritesCount}
@@ -164,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <span className="hidden sm:inline text-xs sm:text-sm">{t.login}</span>
                 <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#00685f] text-white flex items-center justify-center shadow-2xs">
-                  <span className="material-symbols-outlined text-[15px] sm:text-[17px]">person</span>
+                  <AppIcon name="person" className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                 </div>
               </button>
             )}
@@ -175,9 +175,10 @@ export const Header: React.FC<HeaderProps> = ({
               className="lg:hidden w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-[#0b1c30] hover:bg-[#e5eeff] cursor-pointer shrink-0"
               aria-label="القائمة الرئيسية"
             >
-              <span className="material-symbols-outlined text-[22px] sm:text-[24px]">
-                {mobileMenuOpen ? 'close' : 'menu'}
-              </span>
+              <AppIcon
+                name={mobileMenuOpen ? 'close' : 'menu'}
+                className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b1c30]"
+              />
             </button>
           </div>
         </div>
@@ -200,9 +201,10 @@ export const Header: React.FC<HeaderProps> = ({
                 }`}
               >
                 <span>{item.label}</span>
-                <span className="material-symbols-outlined text-[18px] rtl:-scale-x-100 opacity-70">
-                  chevron_right
-                </span>
+                <AppIcon
+                  name={isAr ? "chevron_left" : "chevron_right"}
+                  className="w-4 h-4 opacity-70"
+                />
               </button>
             ))}
             <div className="pt-2 border-t border-[#e5eeff] flex flex-col gap-2">

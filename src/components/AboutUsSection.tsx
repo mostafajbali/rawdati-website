@@ -1,6 +1,7 @@
 import React from 'react';
 import { Language } from '../i18n/translations.ts';
 import { RawdatiLogo } from './RawdatiLogo.tsx';
+import { AppIcon } from './AppIcon.tsx';
 
 interface AboutUsSectionProps {
   lang: Language;
@@ -18,59 +19,59 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
   const stats = [
     {
       value: '+500',
-      label: isAr ? 'حضانة ومركز معتمد' : 'Certified Centers',
-      icon: 'verified',
+      label: isAr ? 'حضانة معتمدة بالمملكة' : 'Certified Nurseries Across KSA',
+      icon: 'school',
       color: 'text-[#00685f]',
       bg: 'bg-[#00685f]/10'
     },
     {
-      value: '+15,000',
-      label: isAr ? 'ولي أمر موثق' : 'Happy Parents',
-      icon: 'family_restroom',
+      value: '+12,000',
+      label: isAr ? 'طفل مسجل وسعيد' : 'Enrolled & Happy Children',
+      icon: 'favorite',
       color: 'text-[#fea619]',
       bg: 'bg-[#fea619]/15'
     },
     {
-      value: '18+',
-      label: isAr ? 'مدينة ومحافظة في المملكة' : 'Saudi Cities & Regions',
-      icon: 'location_city',
-      color: 'text-[#00685f]',
-      bg: 'bg-[#00685f]/10'
+      value: '4.9 ★',
+      label: isAr ? 'متوسط تقييمات الأمهات' : 'Average Mother Satisfaction',
+      icon: 'star',
+      color: 'text-[#855300]',
+      bg: 'bg-[#ffddb8]/60'
     },
     {
       value: '100%',
-      label: isAr ? 'تحقق ميداني ورسمي' : 'Field Verified Standards',
-      icon: 'verified_user',
-      color: 'text-[#fea619]',
-      bg: 'bg-[#fea619]/15'
+      label: isAr ? 'تحقق وفحص ميداني' : 'Field Audited & Verified',
+      icon: 'verified',
+      color: 'text-[#00685f]',
+      bg: 'bg-[#71f8e4]/30'
     }
   ];
 
   const pillars = [
     {
-      icon: 'health_and_safety',
-      title: isAr ? 'الأمان والصحة أولاً' : 'Safety & Hygiene First',
+      icon: 'verified',
+      title: isAr ? 'التراخيص والاعتماد الرسمي' : 'Official Licensing & Accreditation',
       desc: isAr
-        ? 'لا نقبل أي مركز إلا بعد التحقق من ترخيص وزارة التعليم، كاميرات المراقبة، وتوافر كادر تمريضي معتمد.'
-        : 'We strictly list nurseries meeting official educational ministry licenses, CCTV surveillance, and licensed healthcare.'
+        ? 'نوثق شهادات وسجلات وزارة التعليم لضمان الالتزام بأعلى معايير جودة المبنى التعليمي وسلامة البيئة.'
+        : 'Every center is validated against Ministry of Education licensing and safety building codes.'
     },
     {
-      icon: 'visibility',
-      title: isAr ? 'شفافية كاملة وتقييمات حقيقية' : 'Full Transparency & Real Reviews',
+      icon: 'videocam',
+      title: isAr ? 'الأمان التام وكاميرات البث' : 'Live CCTV & Strict Child Safety',
       desc: isAr
-        ? 'نضمن أن كل مراجعة أو صورة لمرافق الحضانة قادمة من أولياء أمور مسجلين خاض أطفالهم تجربة حقيقية.'
-        : 'Every review and facility photograph comes from verified registered parents with real children attendance.'
+        ? 'أولوية قصوى لمراكز مجهزة بأنظمة مراقبة حية للأمهات وإجراءات دخول وخروج إلكترونية آمنة.'
+        : 'Prioritizing nurseries with encrypted parent-viewing cameras and strict biometric access.'
     },
     {
-      icon: 'psychology',
-      title: isAr ? 'مناهج مبكرة تحفز المهارات' : 'Enriching Early Curriculums',
+      icon: 'school',
+      title: isAr ? 'المناهج وكفاءة المربيات' : 'Early Childhood Curriculum & Staff',
       desc: isAr
-        ? 'نوفر تفاصيل دقيقة عن مناهج منتسوري، ريجيو إميليا، ثنائية اللغة، وبرامج تحفيظ القرآن الكريم.'
-        : 'Detailed breakdowns of Montessori, Reggio Emilia, bilingual, and early development educational approaches.'
+        ? 'متابعة مناهج منتسوري، البرامج ثنائية اللغة، ونسب المعلمات للأطفال لضمان اهتمام فردي متكامل.'
+        : 'Curated programs (Montessori, bilingual) with low teacher-to-child ratios for personalized care.'
     },
     {
-      icon: 'handshake',
-      title: isAr ? 'دعم مستمر من مستشارين' : 'Continuous Expert Advisory',
+      icon: 'support_agent',
+      title: isAr ? 'استشارات توجيهية محايدة' : 'Unbiased Parent Advisory Support',
       desc: isAr
         ? 'فريق من أخصائيي الطفولة المبكرة يقدم لك استشارة هاتفية مجانية لمساعدتك في اختيار المركز الأنسب.'
         : 'Our certified childhood specialists provide complimentary phone consultations to guide your final choice.'
@@ -87,9 +88,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e5eeff] text-[#00685f] text-xs sm:text-sm font-bold shadow-xs">
-            <span className="material-symbols-outlined text-[18px] text-[#fea619]" style={{ fontVariationSettings: "'FILL' 1" }}>
-              info
-            </span>
+            <AppIcon name="info" className="w-4 h-4 text-[#fea619]" />
             <span>{isAr ? 'عن منصة روضتي' : 'About Rawdati Platform'}</span>
           </div>
 
@@ -98,37 +97,39 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
               <>
                 شريكك الأول والموثوق في رحلة{' '}
                 <span className="text-[#00685f] underline decoration-[#fea619] decoration-wavy decoration-2">
-                  تعليم ورعاية طفلك
-                </span>
+                  اختيار الحضانة المثالية
+                </span>{' '}
+                لطفلك
               </>
             ) : (
               <>
-                Your Trusted Guide in Your Child's{' '}
+                Your Trusted Guide to the{' '}
                 <span className="text-[#00685f] underline decoration-[#fea619] decoration-wavy decoration-2">
-                  Early Learning & Care
-                </span>
+                  Best Nurseries
+                </span>{' '}
+                in Saudi Arabia
               </>
             )}
           </h2>
 
-          <p className="text-sm sm:text-base text-[#3d4947] leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-[#3d4947] max-w-2xl mx-auto leading-relaxed">
             {isAr
-              ? 'انطلقت منصة «روضتي» لتكون المرجع الوطني الأول والشامل في المملكة العربية السعودية لمساعدة الأمهات والآباء في العثور على بيئة تعليمية وحضانية آمنة تلهم أطفالهم وتمنح الأسرة راحة البال التامة.'
-              : 'Rawdati is Saudi Arabia’s premier directory for discovering, comparing, and scheduling visits with officially certified nurseries, daycare centers, and kindergartens.'}
+              ? 'تأسست منصة «روضتي» لتكون الدليل الوطني الأول الذي يجمع دور الحضانة ومراكز ضيافة الأطفال المعتمدة في المملكة العربية السعودية تحت مظلة رقمية موحدة مبنية على معايير الأمان، الشفافية، والجودة التربوية.'
+              : 'Rawdati is the premier authorized digital directory connecting Saudi parents with certified early childhood care, ensuring verified licenses, safety standards, and real feedback.'}
           </p>
         </div>
 
-        {/* Story & Vision Feature Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl p-6 sm:p-10 border border-[#e5eeff] shadow-sm mb-16">
+        {/* Narrative & Visual Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-16">
           <div className="lg:col-span-7 space-y-5">
             <div className="flex items-center gap-3">
-              <RawdatiLogo size={42} className="w-11 h-11 shrink-0" />
+              <RawdatiLogo size={48} />
               <div>
                 <h3 className="text-lg sm:text-xl font-bold text-[#00685f]">
-                  {isAr ? 'رسالتنا وهدفنا' : 'Our Mission & Vision'}
+                  {isAr ? 'رسالتنا: أمان طفلك وراحة بالك أولاً' : 'Our Mission: Child Safety & Parental Peace of Mind'}
                 </h3>
                 <span className="text-xs text-[#6d7a77]">
-                  {isAr ? 'رؤية المملكة 2030 لتمكين الأسرة وتطوير الطفولة المبكرة' : 'Supporting early childhood excellence'}
+                  {isAr ? 'دعم مستهدفات تنمية الطفولة المبكرة ورؤية 2030' : 'Empowering Saudi Vision 2030 early childcare goals'}
                 </span>
               </div>
             </div>
@@ -141,27 +142,25 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div className="flex items-start gap-2.5 bg-[#f8f9ff] p-3.5 rounded-2xl border border-[#e5eeff]">
-                <span className="material-symbols-outlined text-[#00685f] text-[20px] shrink-0 mt-0.5">check_circle</span>
+                <AppIcon name="check_circle" className="w-5 h-5 text-[#00685f] shrink-0 mt-0.5" />
                 <span className="text-xs font-bold text-[#0b1c30]">
                   {isAr ? 'تراخيص رسمية معتمدة 100%' : '100% MOE Certified Centers'}
                 </span>
               </div>
               <div className="flex items-start gap-2.5 bg-[#f8f9ff] p-3.5 rounded-2xl border border-[#e5eeff]">
-                <span className="material-symbols-outlined text-[#fea619] text-[20px] shrink-0 mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  star
-                </span>
+                <AppIcon name="star" className="w-5 h-5 text-[#fea619] shrink-0 mt-0.5" filled />
                 <span className="text-xs font-bold text-[#0b1c30]">
                   {isAr ? 'تقييمات مجتمعية من أمهات وآباء حقيقيين' : 'Authentic Parent Community Reviews'}
                 </span>
               </div>
               <div className="flex items-start gap-2.5 bg-[#f8f9ff] p-3.5 rounded-2xl border border-[#e5eeff]">
-                <span className="material-symbols-outlined text-[#00685f] text-[20px] shrink-0 mt-0.5">photo_camera</span>
+                <AppIcon name="photo_camera" className="w-5 h-5 text-[#00685f] shrink-0 mt-0.5" />
                 <span className="text-xs font-bold text-[#0b1c30]">
                   {isAr ? 'استعراض واقعي لمرافق الحضانة وغرف النوم' : 'Real Nursery Facilities Photos'}
                 </span>
               </div>
               <div className="flex items-start gap-2.5 bg-[#f8f9ff] p-3.5 rounded-2xl border border-[#e5eeff]">
-                <span className="material-symbols-outlined text-[#fea619] text-[20px] shrink-0 mt-0.5">support_agent</span>
+                <AppIcon name="support_agent" className="w-5 h-5 text-[#fea619] shrink-0 mt-0.5" />
                 <span className="text-xs font-bold text-[#0b1c30]">
                   {isAr ? 'استشارات مجانية مع أخصائيي طفولة' : 'Free Childcare Advisory Calls'}
                 </span>
@@ -175,14 +174,14 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
                 className="px-5 py-2.5 rounded-2xl bg-[#00685f] hover:bg-[#008378] text-white text-xs sm:text-sm font-bold shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
               >
                 <span>{isAr ? 'استكشف الحضانات المعتمدة' : 'Browse Nurseries'}</span>
-                <span className="material-symbols-outlined text-[18px] rtl:-scale-x-100">arrow_forward</span>
+                <AppIcon name={isAr ? "arrow_left" : "arrow_right"} className="w-4 h-4" />
               </button>
               <button
                 type="button"
                 onClick={onOpenConsultation}
                 className="px-5 py-2.5 rounded-2xl bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] text-xs sm:text-sm font-bold shadow-xs cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
               >
-                <span className="material-symbols-outlined text-[18px]">support_agent</span>
+                <AppIcon name="support_agent" className="w-4 h-4 text-[#684000]" />
                 <span>{isAr ? 'طلب استشارة مجانية' : 'Free Consultation'}</span>
               </button>
             </div>
@@ -228,7 +227,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
               >
                 <div className="space-y-3">
                   <div className="w-12 h-12 rounded-2xl bg-[#00685f]/10 text-[#00685f] flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[26px]">{pillar.icon}</span>
+                    <AppIcon name={pillar.icon} className="w-6 h-6 text-[#00685f]" />
                   </div>
                   <h4 className="text-base font-bold text-[#0b1c30]">{pillar.title}</h4>
                   <p className="text-xs text-[#3d4947] leading-relaxed">{pillar.desc}</p>
@@ -244,7 +243,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
             {stats.map((s, idx) => (
               <div key={idx} className="space-y-2">
                 <div className={`w-12 h-12 rounded-2xl ${s.bg} ${s.color} mx-auto flex items-center justify-center shadow-2xs`}>
-                  <span className="material-symbols-outlined text-[24px]">{s.icon}</span>
+                  <AppIcon name={s.icon} className="w-6 h-6" filled={s.icon === 'star' || s.icon === 'favorite'} />
                 </div>
                 <div className={`text-2xl sm:text-3xl font-extrabold ${s.color}`}>
                   {s.value}

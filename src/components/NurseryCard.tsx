@@ -1,6 +1,7 @@
 import React from 'react';
 import { Nursery } from '../types.ts';
 import { Language, translations } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface NurseryCardProps {
   nursery: Nursery;
@@ -25,15 +26,15 @@ export const NurseryCard: React.FC<NurseryCardProps> = ({
   const getBadgeIcon = (type?: string) => {
     switch (type) {
       case 'gold':
-        return 'stars';
+        return 'workspace_premium';
       case 'trending':
-        return 'trending_up';
+        return 'sparkles';
       case 'discount':
-        return 'local_offer';
+        return 'star';
       case 'new':
-        return 'new_releases';
+        return 'sparkles';
       case 'exclusive':
-        return 'military_tech';
+        return 'workspace_premium';
       default:
         return 'verified';
     }
@@ -53,12 +54,11 @@ export const NurseryCard: React.FC<NurseryCardProps> = ({
         {/* Status / Category Ribbon Badge */}
         {nursery.badge && (
           <div className="absolute top-3 right-3 bg-[#fea619] text-[#684000] px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
-            <span
-              className="material-symbols-outlined text-[15px]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              {getBadgeIcon(nursery.badge.type)}
-            </span>
+            <AppIcon
+              name={getBadgeIcon(nursery.badge.type)}
+              className="w-3.5 h-3.5 text-[#684000]"
+              filled
+            />
             <span>{nursery.badge.text}</span>
           </div>
         )}
@@ -73,22 +73,20 @@ export const NurseryCard: React.FC<NurseryCardProps> = ({
           }}
           className="absolute top-3 left-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm text-[#0b1c30] hover:text-[#ba1a1a] flex items-center justify-center transition-colors shadow-sm cursor-pointer z-10 active:scale-90"
         >
-          <span
-            className={`material-symbols-outlined text-[20px] ${isFavorite ? 'text-[#ba1a1a]' : 'text-[#3d4947]'}`}
-            style={{ fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0" }}
-          >
-            favorite
-          </span>
+          <AppIcon
+            name="favorite"
+            className={`w-5 h-5 ${isFavorite ? 'text-[#ba1a1a]' : 'text-[#3d4947]'}`}
+            filled={isFavorite}
+          />
         </button>
 
         {/* Rating Pill */}
         <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl flex items-center gap-1 shadow-xs">
-          <span
-            className="material-symbols-outlined text-[#fea619] text-[16px]"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            star
-          </span>
+          <AppIcon
+            name="star"
+            className="w-4 h-4 text-[#fea619]"
+            filled
+          />
           <span className="text-xs font-bold text-[#0b1c30]">{nursery.rating.toFixed(1)}</span>
           <span className="text-[11px] text-[#6d7a77]">({nursery.reviewsCount})</span>
         </div>
@@ -112,7 +110,7 @@ export const NurseryCard: React.FC<NurseryCardProps> = ({
           </button>
 
           <div className="flex items-center gap-1 text-[#6d7a77] text-xs">
-            <span className="material-symbols-outlined text-[#00685f] text-[16px]">location_on</span>
+            <AppIcon name="location_on" className="w-4 h-4 text-[#00685f] shrink-0" />
             <span>
               {nursery.cityName}، {nursery.district} ({t.kmAway} {nursery.distance})
             </span>
@@ -154,9 +152,10 @@ export const NurseryCard: React.FC<NurseryCardProps> = ({
             className="px-3.5 sm:px-4 py-2 sm:py-2.5 bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] text-xs sm:text-sm rounded-2xl transition-all shadow-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95 shrink-0"
           >
             <span>{t.bookTourBtn}</span>
-            <span className="material-symbols-outlined text-[16px] rtl:-scale-x-100">
-              chevron_right
-            </span>
+            <AppIcon
+              name={isAr ? "chevron_left" : "chevron_right"}
+              className="w-4 h-4"
+            />
           </button>
         </div>
       </div>

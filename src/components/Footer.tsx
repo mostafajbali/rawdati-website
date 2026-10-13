@@ -1,6 +1,8 @@
 import React from 'react';
 import { Language, translations } from '../i18n/translations.ts';
 import { RawdatiLogo } from './RawdatiLogo.tsx';
+import { AppIcon } from './AppIcon.tsx';
+import { NurseryQuickContactForm } from './NurseryQuickContactForm.tsx';
 
 interface FooterProps {
   onOpenRegister: () => void;
@@ -20,9 +22,15 @@ export const Footer: React.FC<FooterProps> = ({
   const t = translations[lang];
 
   return (
-    <footer className="w-full bg-[#eff4ff] text-[#3d4947] pt-12 pb-24 lg:pb-8 border-t border-[#00685f]/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pb-8">
+    <footer className="w-full bg-[#eff4ff] text-[#3d4947] pt-12 pb-24 lg:pb-12 border-t border-[#00685f]/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        {/* Quick Contact Form for Nursery Owners */}
+        <section id="nursery-quick-contact" aria-label={t.quickContactTitle}>
+          <NurseryQuickContactForm lang={lang} />
+        </section>
+
+        {/* Footer Navigation Columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pb-4 pt-4 border-t border-[#00685f]/10">
           {/* Column 1: Brand & About */}
           <div className="space-y-3.5 sm:col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5">
@@ -38,21 +46,21 @@ export const Footer: React.FC<FooterProps> = ({
                 aria-label="share"
                 className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#00685f] hover:bg-[#00685f] hover:text-white transition-colors shadow-xs"
               >
-                <span className="material-symbols-outlined text-[18px]">share</span>
+                <AppIcon name="share" className="w-4 h-4" />
               </a>
               <a
                 href="#chat"
                 aria-label="chat"
                 className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#00685f] hover:bg-[#00685f] hover:text-white transition-colors shadow-xs"
               >
-                <span className="material-symbols-outlined text-[18px]">forum</span>
+                <AppIcon name="forum" className="w-4 h-4" />
               </a>
               <a
                 href="mailto:support@rawdati.sa"
                 aria-label="mail"
                 className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#00685f] hover:bg-[#00685f] hover:text-white transition-colors shadow-xs"
               >
-                <span className="material-symbols-outlined text-[18px]">mail</span>
+                <AppIcon name="mail" className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -109,6 +117,15 @@ export const Footer: React.FC<FooterProps> = ({
             <h3 className="text-sm font-bold text-[#0b1c30]">{t.forCenters}</h3>
             <ul className="space-y-2 text-xs">
               <li>
+                <a
+                  href="#nursery-quick-contact"
+                  className="hover:text-[#00685f] transition-colors cursor-pointer text-start font-bold text-[#00685f] flex items-center gap-1.5"
+                >
+                  <AppIcon name="forum" className="w-3.5 h-3.5" />
+                  <span>{t.quickContactTitle}</span>
+                </a>
+              </li>
+              <li>
                 <button
                   onClick={onOpenRegister}
                   className="hover:text-[#00685f] transition-colors cursor-pointer text-start"
@@ -148,15 +165,15 @@ export const Footer: React.FC<FooterProps> = ({
             <h3 className="text-sm font-bold text-[#0b1c30]">{t.contactAndSupport}</h3>
             <ul className="space-y-2 text-xs">
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00685f] text-[18px]">call</span>
+                <AppIcon name="call" className="w-4 h-4 text-[#00685f]" />
                 <span className="font-mono">800-RAWDA-00</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00685f] text-[18px]">mail</span>
+                <AppIcon name="mail" className="w-4 h-4 text-[#00685f]" />
                 <span>support@rawdati.sa</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00685f] text-[18px]">location_on</span>
+                <AppIcon name="location_on" className="w-4 h-4 text-[#00685f]" />
                 <span>{lang === 'ar' ? 'المملكة العربية السعودية' : 'Kingdom of Saudi Arabia'}</span>
               </li>
             </ul>

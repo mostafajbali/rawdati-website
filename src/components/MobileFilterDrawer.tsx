@@ -1,5 +1,6 @@
 import React from 'react';
 import { FilterState } from '../types.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface MobileFilterDrawerProps {
   isOpen: boolean;
@@ -38,7 +39,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-3 border-b border-[#e5eeff]">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#00685f] text-[22px]">tune</span>
+            <AppIcon name="tune" className="w-5 h-5 text-[#00685f]" />
             <h3 className="text-lg font-bold text-[#0b1c30]">تصفية الحضانات</h3>
           </div>
           <button
@@ -46,7 +47,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
             type="button"
             className="w-8 h-8 rounded-full bg-[#eff4ff] flex items-center justify-center text-[#3d4947] hover:text-[#0b1c30] cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <AppIcon name="close" className="w-4 h-4" />
           </button>
         </div>
 
@@ -132,7 +133,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
                         : 'bg-[#eff4ff] text-[#3d4947]'
                     }`}
                   >
-                    {isChecked && <span className="material-symbols-outlined text-[15px]">check</span>}
+                    {isChecked && <AppIcon name="check" className="w-3.5 h-3.5" />}
                     <span>{item.label}</span>
                   </button>
                 );
@@ -163,7 +164,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
                         : 'bg-[#eff4ff] text-[#3d4947]'
                     }`}
                   >
-                    {isChecked && <span className="material-symbols-outlined text-[15px]">check</span>}
+                    {isChecked && <AppIcon name="check" className="w-3.5 h-3.5" />}
                     <span>{item.label}</span>
                   </button>
                 );

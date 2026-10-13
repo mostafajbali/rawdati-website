@@ -19,6 +19,7 @@ import { MobileBottomNav } from './components/MobileBottomNav.tsx';
 import { EducationalProgramsModal } from './components/EducationalProgramsModal.tsx';
 import { CommunityReviewsModal } from './components/CommunityReviewsModal.tsx';
 import { AboutUsSection } from './components/AboutUsSection.tsx';
+import { AppIcon } from './components/AppIcon.tsx';
 import { Language, translations } from './i18n/translations.ts';
 import {
   auth,
@@ -287,7 +288,7 @@ export default function App() {
                 onClick={() => setIsMobileFilterDrawerOpen(true)}
                 className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white text-[#0b1c30] shadow-xs border border-[#e5eeff] text-xs font-bold cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[18px] text-[#00685f]">tune</span>
+                <AppIcon name="tune" className="w-4 h-4 text-[#00685f]" />
                 <span>{t.filterBtn}</span>
                 <span className="w-4 h-4 rounded-full bg-[#fea619] text-[#684000] text-[10px] font-bold flex items-center justify-center">
                   4
@@ -321,7 +322,7 @@ export default function App() {
                   }`}
                   title={t.viewGrid}
                 >
-                  <span className="material-symbols-outlined text-[18px]">grid_view</span>
+                  <AppIcon name="grid_view" className="w-4 h-4" />
                   <span className="hidden md:inline">{t.viewGrid}</span>
                 </button>
                 <button
@@ -334,7 +335,7 @@ export default function App() {
                   }`}
                   title={t.viewMap}
                 >
-                  <span className="material-symbols-outlined text-[18px]">map</span>
+                  <AppIcon name="map" className="w-4 h-4" />
                   <span className="hidden md:inline">{t.viewMap}</span>
                 </button>
               </div>
@@ -367,7 +368,7 @@ export default function App() {
                 {displayedNurseries.length === 0 ? (
                   <div className="bg-white rounded-3xl p-12 text-center border border-[#e5eeff] space-y-4">
                     <div className="w-16 h-16 rounded-full bg-[#eff4ff] text-[#00685f] mx-auto flex items-center justify-center">
-                      <span className="material-symbols-outlined text-[32px]">search_off</span>
+                      <AppIcon name="search_off" className="w-8 h-8" />
                     </div>
                     <h3 className="text-lg font-bold text-[#0b1c30]">{t.noNurseriesFound}</h3>
                     <p className="text-xs sm:text-sm text-[#6d7a77] max-w-sm mx-auto">
@@ -408,9 +409,10 @@ export default function App() {
                       className="w-10 h-10 rounded-full flex items-center justify-center text-[#6d7a77] hover:bg-[#eff4ff] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
                       title={t.previousPage}
                     >
-                      <span className="material-symbols-outlined text-[20px] rtl:-scale-x-100">
-                        chevron_left
-                      </span>
+                      <AppIcon
+                        name={isAr ? "chevron_right" : "chevron_left"}
+                        className="w-5 h-5"
+                      />
                     </button>
 
                     {/* Page Numbers */}
@@ -441,9 +443,10 @@ export default function App() {
                       className="w-10 h-10 rounded-full flex items-center justify-center text-[#00685f] hover:bg-[#eff4ff] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
                       title={t.nextPage}
                     >
-                      <span className="material-symbols-outlined text-[20px] rtl:-scale-x-100">
-                        chevron_right
-                      </span>
+                      <AppIcon
+                        name={isAr ? "chevron_left" : "chevron_right"}
+                        className="w-5 h-5"
+                      />
                     </button>
                   </div>
 
@@ -460,12 +463,12 @@ export default function App() {
                     className="px-8 py-3 rounded-full bg-[#eff4ff] hover:bg-[#e5eeff] text-[#00685f] text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-xs active:scale-95"
                   >
                     <span>{t.viewMoreNurseries} ({totalItems})</span>
-                    <span className="material-symbols-outlined text-[18px]">expand_more</span>
+                    <AppIcon name="expand_more" className="w-4 h-4" />
                   </button>
 
                   {/* Trust Footer Note */}
                   <div className="flex items-center gap-2 text-[#6d7a77] text-xs mt-1">
-                    <span className="material-symbols-outlined text-[#00685f] text-[18px]">verified_user</span>
+                    <AppIcon name="verified_user" className="w-4 h-4 text-[#00685f]" filled />
                     <span>{t.inspectionFooterNote}</span>
                   </div>
                 </div>

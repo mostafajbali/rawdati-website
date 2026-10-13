@@ -1,6 +1,7 @@
 import React from 'react';
 import { FilterState } from '../types.ts';
 import { Language, translations } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface FilterSidebarProps {
   filters: FilterState;
@@ -45,7 +46,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b border-[#e5eeff]">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#00685f] text-[24px]">tune</span>
+          <AppIcon name="tune" className="w-5 h-5 text-[#00685f]" />
           <span className="text-lg font-bold text-[#0b1c30]">{t.filterTitle}</span>
         </div>
         <button
@@ -111,12 +112,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 className="w-4 h-4 rounded text-[#00685f] focus:ring-0 accent-[#00685f] cursor-pointer"
               />
               <span className="flex-1 flex items-center gap-1.5 text-xs text-[#0b1c30] group-hover:text-[#00685f] transition-colors">
-                <span
-                  className="text-[#fea619] material-symbols-outlined text-[18px]"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  star
-                </span>
+                <AppIcon name="star" className="w-4 h-4 text-[#fea619]" filled />
                 <span className="font-bold">{item.label}</span>
                 <span className="text-[#6d7a77] ml-auto mr-auto">({item.count})</span>
               </span>
@@ -244,7 +240,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         onClick={onApply}
         className="w-full py-3 bg-[#00685f] hover:bg-[#008378] text-white text-sm font-bold rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
       >
-        <span className="material-symbols-outlined text-[18px]">filter_alt</span>
+        <AppIcon name="filter_alt" className="w-4 h-4 text-white" />
         <span>
           {t.applyFilterBtn} ({filteredCount})
         </span>

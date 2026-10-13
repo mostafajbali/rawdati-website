@@ -1,5 +1,6 @@
 import React from 'react';
 import { Language } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface CommunityReviewsModalProps {
   isOpen: boolean;
@@ -58,7 +59,7 @@ export const CommunityReviewsModal: React.FC<CommunityReviewsModalProps> = ({
         <div className="bg-[#fea619] p-5 sm:p-6 text-[#684000] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#684000]/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[24px]">reviews</span>
+              <AppIcon name="reviews" className="w-6 h-6 text-[#684000]" />
             </div>
             <div>
               <h3 className="text-base sm:text-xl font-bold">
@@ -75,7 +76,7 @@ export const CommunityReviewsModal: React.FC<CommunityReviewsModalProps> = ({
             onClick={onClose}
             className="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <AppIcon name="close" className="w-5 h-5 text-[#684000]" />
           </button>
         </div>
 
@@ -123,15 +124,14 @@ export const CommunityReviewsModal: React.FC<CommunityReviewsModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex text-[#fea619]">
+                  <div className="flex text-[#fea619] gap-0.5">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <span
+                      <AppIcon
                         key={s}
-                        className="material-symbols-outlined text-[15px]"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        star
-                      </span>
+                        name="star"
+                        className="w-3.5 h-3.5 text-[#fea619]"
+                        filled
+                      />
                     ))}
                   </div>
                 </div>

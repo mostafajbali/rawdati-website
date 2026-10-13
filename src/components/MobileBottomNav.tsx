@@ -1,5 +1,6 @@
 import React from 'react';
 import { Language, translations } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface MobileBottomNavProps {
   activeTab: 'home' | 'search' | 'favorites' | 'profile';
@@ -37,14 +38,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               }`}
             >
               <div className="relative">
-                <span
-                  className="material-symbols-outlined text-[24px]"
-                  style={{
-                    fontVariationSettings: isActive && tab.id === 'favorites' ? "'FILL' 1" : undefined
-                  }}
-                >
-                  {tab.icon}
-                </span>
+                <AppIcon
+                  name={tab.icon}
+                  className="w-6 h-6"
+                  filled={isActive && tab.id === 'favorites'}
+                />
                 {tab.count !== undefined && tab.count > 0 && (
                   <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-[#fea619] text-[#684000] text-[10px] font-bold flex items-center justify-center shadow-xs">
                     {tab.count}

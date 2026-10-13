@@ -1,5 +1,6 @@
 import React from 'react';
 import { Language, translations } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface ParentGuideBannerProps {
   onOpenConsultation: () => void;
@@ -21,7 +22,7 @@ export const ParentGuideBanner: React.FC<ParentGuideBannerProps> = ({
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
           <div className="md:col-span-8 space-y-3 text-center md:text-start">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/15 rounded-full text-xs font-semibold text-[#89f5e7]">
-              <span className="material-symbols-outlined text-[16px]">support_agent</span>
+              <AppIcon name="support_agent" className="w-4 h-4 text-[#89f5e7]" />
               <span>{t.advisorSupport}</span>
             </div>
 
@@ -39,7 +40,7 @@ export const ParentGuideBanner: React.FC<ParentGuideBannerProps> = ({
               onClick={onOpenConsultation}
               className="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] rounded-2xl text-sm sm:text-base font-bold shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[20px]">call</span>
+              <AppIcon name="call" className="w-5 h-5 text-[#684000]" />
               <span>{t.bookFreeConsultation}</span>
             </button>
           </div>

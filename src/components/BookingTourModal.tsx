@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Nursery } from '../types.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface BookingTourModalProps {
   nursery: Nursery | null;
@@ -40,7 +41,7 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
         <div className="bg-[#00685f] p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[22px]">calendar_month</span>
+              <AppIcon name="calendar_month" className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="font-bold text-base sm:text-lg">حجز جولة تعريفية مجانية</h3>
@@ -51,7 +52,7 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <AppIcon name="close" className="w-4 h-4 text-white" />
           </button>
         </div>
 
@@ -60,9 +61,7 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
           {submitted ? (
             <div className="text-center py-6 space-y-4">
               <div className="w-16 h-16 rounded-full bg-[#89f5e7]/40 text-[#00685f] mx-auto flex items-center justify-center shadow-sm">
-                <span className="material-symbols-outlined text-[36px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  check_circle
-                </span>
+                <AppIcon name="check_circle" className="w-9 h-9 text-[#00685f]" filled />
               </div>
               <h4 className="text-xl font-bold text-[#0b1c30]">تم تأكيد موعد جولتك بنجاح!</h4>
               <p className="text-xs sm:text-sm text-[#3d4947] max-w-sm mx-auto leading-relaxed">

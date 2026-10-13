@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AppIcon } from './AppIcon.tsx';
 
 interface FreeConsultationModalProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ export const FreeConsultationModal: React.FC<FreeConsultationModalProps> = ({
         <div className="bg-gradient-to-r from-[#008378] to-[#00685f] p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-[#89f5e7]">
-              <span className="material-symbols-outlined text-[24px]">support_agent</span>
+              <AppIcon name="support_agent" className="w-6 h-6 text-[#89f5e7]" />
             </div>
             <div>
               <h3 className="font-bold text-base">استشارة هاتفية مجانية مع أخصائي</h3>
@@ -40,7 +41,7 @@ export const FreeConsultationModal: React.FC<FreeConsultationModalProps> = ({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <AppIcon name="close" className="w-4 h-4 text-white" />
           </button>
         </div>
 
@@ -48,7 +49,7 @@ export const FreeConsultationModal: React.FC<FreeConsultationModalProps> = ({
           {submitted ? (
             <div className="text-center py-6 space-y-3">
               <div className="w-14 h-14 rounded-full bg-[#89f5e7]/40 text-[#00685f] mx-auto flex items-center justify-center">
-                <span className="material-symbols-outlined text-[32px]">check</span>
+                <AppIcon name="check" className="w-8 h-8 text-[#00685f]" />
               </div>
               <h4 className="text-lg font-bold text-[#0b1c30]">تم استلام طلب الاستشارة!</h4>
               <p className="text-xs text-[#3d4947] leading-relaxed">

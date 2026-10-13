@@ -1,6 +1,7 @@
 import React from 'react';
 import { FilterState } from '../types.ts';
 import { Language, translations } from '../i18n/translations.ts';
+import { AppIcon } from './AppIcon.tsx';
 
 interface HeroSearchProps {
   filters: FilterState;
@@ -42,10 +43,10 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
 
   const popularTags = [
     { id: 'certified', label: t.tagCertified, icon: 'verified', color: 'secondary' },
-    { id: 'infants', label: t.tagInfants, icon: 'child_care', color: 'primary' },
+    { id: 'infants', label: t.tagInfants, icon: 'school', color: 'primary' },
     { id: 'cctv', label: t.tagCctv, icon: 'videocam', color: 'primary' },
-    { id: 'montessori', label: t.tagMontessori, icon: 'toys', color: 'secondary' },
-    { id: 'extended_hours', label: t.tagExtendedHours, icon: 'bedtime', color: 'primary' }
+    { id: 'montessori', label: t.tagMontessori, icon: 'sparkles', color: 'secondary' },
+    { id: 'extended_hours', label: t.tagExtendedHours, icon: 'clock', color: 'primary' }
   ];
 
   return (
@@ -58,12 +59,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
         {/* Headline & Subtitle */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-9">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e5eeff] text-[#00685f] text-xs sm:text-sm font-semibold shadow-xs">
-            <span
-              className="material-symbols-outlined text-[18px] text-[#fea619]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              verified
-            </span>
+            <AppIcon name="verified" className="w-4 h-4 text-[#fea619]" filled />
             <span>{t.officialBadge}</span>
           </div>
 
@@ -94,39 +90,29 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
           </p>
 
           {/* Trust Highlights Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <div className="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full shadow-xs text-[#0b1c30] border border-[#e5eeff]">
-              <span className="w-7 h-7 rounded-full bg-[#00685f]/10 flex items-center justify-center text-[#00685f]">
-                <span
-                  className="material-symbols-outlined text-[18px]"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  workspace_premium
-                </span>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-2">
+            <div className="flex items-center gap-2 bg-white px-3.5 sm:px-4 py-1.5 rounded-full shadow-xs text-[#0b1c30] border border-[#e5eeff]">
+              <span className="w-7 h-7 rounded-full bg-[#00685f]/10 flex items-center justify-center text-[#00685f] shrink-0">
+                <AppIcon name="workspace_premium" className="w-4 h-4 text-[#00685f]" />
               </span>
-              <span className="text-sm font-bold">{t.badgeCertified}</span>
+              <span className="text-xs sm:text-sm font-bold">{t.badgeCertified}</span>
             </div>
 
-            <div className="flex items-center gap-2 bg-white px-4 py-1.5 rounded-full shadow-xs text-[#0b1c30] border border-[#e5eeff]">
-              <span className="w-7 h-7 rounded-full bg-[#ffddb8]/60 flex items-center justify-center text-[#855300]">
-                <span
-                  className="material-symbols-outlined text-[18px]"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  reviews
-                </span>
+            <div className="flex items-center gap-2 bg-white px-3.5 sm:px-4 py-1.5 rounded-full shadow-xs text-[#0b1c30] border border-[#e5eeff]">
+              <span className="w-7 h-7 rounded-full bg-[#ffddb8]/60 flex items-center justify-center text-[#855300] shrink-0">
+                <AppIcon name="reviews" className="w-4 h-4 text-[#855300]" />
               </span>
-              <span className="text-sm font-bold">{t.badgeReviews}</span>
+              <span className="text-xs sm:text-sm font-bold">{t.badgeReviews}</span>
             </div>
 
             <button
               onClick={onOpenConsultation}
-              className="flex items-center gap-2 bg-white hover:bg-[#eff4ff] px-4 py-1.5 rounded-full shadow-xs text-[#00685f] border border-[#e5eeff] transition-colors cursor-pointer"
+              className="flex items-center gap-2 bg-white hover:bg-[#eff4ff] px-3.5 sm:px-4 py-1.5 rounded-full shadow-xs text-[#00685f] border border-[#e5eeff] transition-colors cursor-pointer"
             >
-              <span className="w-7 h-7 rounded-full bg-[#71f8e4]/40 flex items-center justify-center text-[#00685f]">
-                <span className="material-symbols-outlined text-[18px]">calendar_clock</span>
+              <span className="w-7 h-7 rounded-full bg-[#71f8e4]/40 flex items-center justify-center text-[#00685f] shrink-0">
+                <AppIcon name="calendar_clock" className="w-4 h-4 text-[#00685f]" />
               </span>
-              <span className="text-sm font-bold">{t.badgeFreeTour}</span>
+              <span className="text-xs sm:text-sm font-bold">{t.badgeFreeTour}</span>
             </button>
           </div>
         </div>
@@ -143,7 +129,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
             {/* Input 1: Keywords */}
             <div className="md:col-span-4 relative flex items-center">
               <div className={`absolute ${isAr ? 'right-4' : 'left-4'} text-[#00685f] pointer-events-none flex items-center`}>
-                <span className="material-symbols-outlined text-[22px]">search</span>
+                <AppIcon name="search" className="w-5 h-5 text-[#00685f]" />
               </div>
               <div className="w-full">
                 <label className={`block text-xs font-semibold text-[#3d4947] ${isAr ? 'pr-12' : 'pl-12'} pb-1`}>
@@ -162,7 +148,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
             {/* Input 2: City / District Dropdown */}
             <div className="md:col-span-3 relative flex items-center">
               <div className={`absolute ${isAr ? 'right-4' : 'left-4'} text-[#855300] pointer-events-none flex items-center`}>
-                <span className="material-symbols-outlined text-[22px]">location_on</span>
+                <AppIcon name="location_on" className="w-5 h-5 text-[#855300]" />
               </div>
               <div className="w-full">
                 <label className={`block text-xs font-semibold text-[#3d4947] ${isAr ? 'pr-12' : 'pl-12'} pb-1`}>
@@ -181,9 +167,9 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                     <option value="khobar">{isAr ? 'الخبر' : 'Al Khobar'}</option>
                     <option value="makkah">{isAr ? 'مكة المكرمة' : 'Makkah'}</option>
                   </select>
-                  <span className={`material-symbols-outlined absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2 text-[#6d7a77] pointer-events-none text-[18px]`}>
-                    expand_more
-                  </span>
+                  <div className={`absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2 text-[#6d7a77] pointer-events-none flex items-center`}>
+                    <AppIcon name="expand_more" className="w-4 h-4 text-[#6d7a77]" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -191,7 +177,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
             {/* Input 3: Max Monthly Budget */}
             <div className="md:col-span-3 relative flex items-center">
               <div className={`absolute ${isAr ? 'right-4' : 'left-4'} text-[#00685f] pointer-events-none flex items-center`}>
-                <span className="material-symbols-outlined text-[22px]">payments</span>
+                <AppIcon name="payments" className="w-5 h-5 text-[#00685f]" />
               </div>
               <div className="w-full">
                 <label className={`block text-xs font-semibold text-[#3d4947] ${isAr ? 'pr-12' : 'pl-12'} pb-1`}>
@@ -210,9 +196,9 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                     <option value="3500">{t.searchBudgetUpTo} 3,500 {t.perMonth}</option>
                     <option value="5000">{t.searchBudgetAbove} 3,500 {t.perMonth}</option>
                   </select>
-                  <span className={`material-symbols-outlined absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2 text-[#6d7a77] pointer-events-none text-[18px]`}>
-                    expand_more
-                  </span>
+                  <div className={`absolute ${isAr ? 'left-3' : 'right-3'} top-1/2 -translate-y-1/2 text-[#6d7a77] pointer-events-none flex items-center`}>
+                    <AppIcon name="expand_more" className="w-4 h-4 text-[#6d7a77]" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -224,9 +210,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                 className="w-full h-[46px] bg-[#00685f] hover:bg-[#008378] text-white rounded-2xl flex items-center justify-center gap-2 font-bold text-sm shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-95"
               >
                 <span>{t.searchSubmitBtn}</span>
-                <span className="material-symbols-outlined text-[20px] rtl:-scale-x-100">
-                  arrow_forward
-                </span>
+                <AppIcon name={isAr ? "arrow_left" : "arrow_right"} className="w-4 h-4" />
               </button>
             </div>
           </form>
@@ -247,13 +231,12 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                       : 'bg-[#e5eeff] hover:bg-[#dce9ff] text-[#0b1c30]'
                   }`}
                 >
-                  <span
-                    className={`material-symbols-outlined text-[15px] ${
+                  <AppIcon
+                    name={tag.icon}
+                    className={`w-3.5 h-3.5 ${
                       isSelected ? 'text-white' : tag.color === 'secondary' ? 'text-[#fea619]' : 'text-[#00685f]'
                     }`}
-                  >
-                    {tag.icon}
-                  </span>
+                  />
                   <span>{tag.label}</span>
                 </button>
               );

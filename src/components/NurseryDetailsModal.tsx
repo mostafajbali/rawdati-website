@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Nursery } from '../types.ts';
 import { NurseryReviewsSection } from './NurseryReviewsSection.tsx';
+import { AppIcon } from './AppIcon.tsx';
 
 interface NurseryDetailsModalProps {
   nursery: Nursery | null;
@@ -41,7 +42,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
               onClick={onClose}
               className="w-9 h-9 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0b1c30] hover:bg-white cursor-pointer shadow-sm"
             >
-              <span className="material-symbols-outlined text-[20px]">close</span>
+              <AppIcon name="close" className="w-5 h-5 text-[#0b1c30]" />
             </button>
             <div className="flex items-center gap-2">
               <button
@@ -50,12 +51,11 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
                   isFavorite ? 'text-[#ba1a1a]' : 'text-[#3d4947]'
                 }`}
               >
-                <span
-                  className="material-symbols-outlined text-[20px]"
-                  style={{ fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0" }}
-                >
-                  favorite
-                </span>
+                <AppIcon
+                  name="favorite"
+                  className={`w-5 h-5 ${isFavorite ? 'text-[#ba1a1a]' : 'text-[#3d4947]'}`}
+                  filled={isFavorite}
+                />
               </button>
               {nursery.badge && (
                 <span className="px-3 py-1 rounded-full bg-[#fea619] text-[#684000] text-xs font-bold shadow-sm">
@@ -69,20 +69,18 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
           <div className="absolute bottom-4 right-4 left-4 text-white z-10 space-y-1">
             <div className="flex items-center gap-2 text-xs">
               <span className="px-2 py-0.5 rounded-full bg-[#00685f] text-white font-bold flex items-center gap-1 text-[11px]">
-                <span className="material-symbols-outlined text-[14px]">verified</span>
+                <AppIcon name="verified" className="w-3.5 h-3.5 text-white" filled />
                 <span>مرخصة رسمياً: {nursery.licenseNumber || 'MOE-KSA-9901'}</span>
               </span>
               <span className="text-[#ffddb8] flex items-center gap-1 font-bold">
-                <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  star
-                </span>
+                <AppIcon name="star" className="w-4 h-4 text-[#fea619]" filled />
                 <span>{nursery.rating.toFixed(1)}</span>
                 <span className="text-white/80 text-[11px]">({nursery.reviewsCount} تقييم موثق)</span>
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold">{nursery.name}</h2>
             <p className="text-xs text-white/90 flex items-center gap-1">
-              <span className="material-symbols-outlined text-[16px]">location_on</span>
+              <AppIcon name="location_on" className="w-4 h-4 text-white" />
               <span>{nursery.cityName} - {nursery.district} · {nursery.address || 'المملكة العربية السعودية'}</span>
             </p>
           </div>
@@ -93,7 +91,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
           {[
             { id: 'about', label: 'نبذة عن الحضانة', icon: 'info' },
             { id: 'curriculum', label: 'المناهج والأنشطة', icon: 'school' },
-            { id: 'safety', label: 'السلامة والبيئة الصحية', icon: 'health_and_safety' },
+            { id: 'safety', label: 'السلامة والبيئة الصحية', icon: 'verified_user' },
             { id: 'reviews', label: `التقييمات (${nursery.reviewsCount})`, icon: 'rate_review' }
           ].map((tab) => (
             <button
@@ -105,7 +103,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
                   : 'border-transparent text-[#6d7a77] hover:text-[#0b1c30]'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">{tab.icon}</span>
+              <AppIcon name={tab.icon} className="w-4 h-4" />
               <span>{tab.label}</span>
             </button>
           ))}
@@ -151,16 +149,16 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
                       key={idx}
                       className="px-3 py-1 rounded-full bg-[#00685f]/10 text-[#00685f] text-xs font-bold flex items-center gap-1"
                     >
-                      <span className="material-symbols-outlined text-[15px]">check_circle</span>
+                      <AppIcon name="check_circle" className="w-3.5 h-3.5 text-[#00685f]" />
                       <span>{tag}</span>
                     </span>
                   ))}
                   <span className="px-3 py-1 rounded-full bg-[#00685f]/10 text-[#00685f] text-xs font-bold flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px]">check_circle</span>
+                    <AppIcon name="check_circle" className="w-3.5 h-3.5 text-[#00685f]" />
                     <span>تأمين صحي وإسعافات فورية</span>
                   </span>
                   <span className="px-3 py-1 rounded-full bg-[#00685f]/10 text-[#00685f] text-xs font-bold flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px]">check_circle</span>
+                    <AppIcon name="check_circle" className="w-3.5 h-3.5 text-[#00685f]" />
                     <span>تقارير يومية عن نوم وغذاء الطفل</span>
                   </span>
                 </div>
@@ -200,7 +198,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-3.5 rounded-2xl border border-[#e5eeff] bg-[#f8f9ff] flex items-start gap-3">
                   <span className="w-8 h-8 rounded-full bg-[#00685f]/15 text-[#00685f] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">videocam</span>
+                    <AppIcon name="videocam" className="w-4 h-4 text-[#00685f]" />
                   </span>
                   <div>
                     <span className="text-xs font-bold block text-[#0b1c30]">بث مباشر مشفر 24/7 للأمهات</span>
@@ -210,7 +208,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
 
                 <div className="p-3.5 rounded-2xl border border-[#e5eeff] bg-[#f8f9ff] flex items-start gap-3">
                   <span className="w-8 h-8 rounded-full bg-[#fea619]/20 text-[#855300] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">medical_services</span>
+                    <AppIcon name="medical_services" className="w-4 h-4 text-[#855300]" />
                   </span>
                   <div>
                     <span className="text-xs font-bold block text-[#0b1c30]">عيادة تمريض مقيمة</span>
@@ -220,7 +218,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
 
                 <div className="p-3.5 rounded-2xl border border-[#e5eeff] bg-[#f8f9ff] flex items-start gap-3">
                   <span className="w-8 h-8 rounded-full bg-[#00685f]/15 text-[#00685f] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">door_sliding</span>
+                    <AppIcon name="door_sliding" className="w-4 h-4 text-[#00685f]" />
                   </span>
                   <div>
                     <span className="text-xs font-bold block text-[#0b1c30]">أبواب أمان ذكية بالبصمة</span>
@@ -230,7 +228,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
 
                 <div className="p-3.5 rounded-2xl border border-[#e5eeff] bg-[#f8f9ff] flex items-start gap-3">
                   <span className="w-8 h-8 rounded-full bg-[#fea619]/20 text-[#855300] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[18px]">restaurant</span>
+                    <AppIcon name="restaurant" className="w-4 h-4 text-[#855300]" />
                   </span>
                   <div>
                     <span className="text-xs font-bold block text-[#0b1c30]">مطابخ معتمدة ووجبات طازجة</span>
@@ -264,7 +262,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
               rel="noopener noreferrer"
               className="px-4 py-2.5 rounded-2xl bg-[#eff4ff] hover:bg-[#e5eeff] text-[#00685f] text-xs font-bold flex items-center gap-1.5 transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">chat</span>
+              <AppIcon name="chat" className="w-4 h-4 text-[#00685f]" />
               <span>محادثة واتساب</span>
             </a>
             <button
@@ -274,7 +272,7 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
               }}
               className="flex-1 sm:flex-initial px-6 py-2.5 rounded-2xl bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] text-sm font-bold shadow-md cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
             >
-              <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+              <AppIcon name="calendar_month" className="w-4 h-4 text-[#684000]" />
               <span>حجز جولة تعريفية مجانية</span>
             </button>
           </div>
