@@ -1,6 +1,6 @@
 {
-  "name": "روضتي - دليل لاستكشاف ومقارنة الحضانات",
-  "description": "منصة تجريبية لاستكشاف ومقارنة دور الحضانة ورياض الأطفال",
+  "name": "روضتي - مشروع تجريبي لاستعراض الحضانات",
+  "description": "مشروع تجريبي لاستعراض الحضانات",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

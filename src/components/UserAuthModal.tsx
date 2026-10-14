@@ -40,7 +40,6 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [regRole, setRegRole] = useState<'parent' | 'owner'>('parent');
 
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -128,7 +127,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
       displayName: regName.trim(),
       email: regEmail.trim().toLowerCase(),
       phone: regPhone.trim() || undefined,
-      role: regRole,
+      role: 'parent',
       createdAt: new Date().toISOString().split('T')[0]
     };
 
@@ -229,7 +228,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                 </h4>
                 <p className="text-xs text-[#6d7a77] font-mono mt-0.5">{currentUser.email}</p>
                 <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#89f5e7]/30 text-[#00685f] border border-[#00685f]/20">
-                  <span>{currentRole === 'owner' ? '🏫 مالك ومسؤول حضانة' : '👨‍👩‍👧 ولي أمر معتمد'}</span>
+                  <span>{currentRole === 'owner' ? '🏫 مالك ومسؤول حضانة' : '👨‍👩‍👧 ولي أمر مسجّل'}</span>
                 </div>
               </div>
 
@@ -453,46 +452,6 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                   <p className="text-xs text-[#6d7a77] text-center">
                     أنشئ حسابك الجديد الآن وسيتم تسجيل دخولك فوراً إلى المنصة.
                   </p>
-
-                  {/* Role Chooser */}
-                  <div>
-                    <label className="block text-xs font-bold text-[#3d4947] mb-1.5">
-                      نوع الحساب المطلوب:
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setRegRole('parent')}
-                        className={`p-2 rounded-xl text-xs font-bold border transition-all cursor-pointer text-start flex items-center gap-2 ${
-                          regRole === 'parent'
-                            ? 'bg-[#00685f] text-white border-[#00685f] shadow-xs'
-                            : 'bg-[#eff4ff] text-slate-700 border-slate-200 hover:bg-[#dce9ff]'
-                        }`}
-                      >
-                        <span className="text-base">👨‍👩‍👧</span>
-                        <div className="leading-tight">
-                          <span className="block font-bold">ولي أمر</span>
-                          <span className="text-[10px] opacity-80 block font-normal">بحث وحجز وتقييم</span>
-                        </div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setRegRole('owner')}
-                        className={`p-2 rounded-xl text-xs font-bold border transition-all cursor-pointer text-start flex items-center gap-2 ${
-                          regRole === 'owner'
-                            ? 'bg-[#fea619] text-[#684000] border-[#fea619] shadow-xs'
-                            : 'bg-[#eff4ff] text-slate-700 border-slate-200 hover:bg-[#dce9ff]'
-                        }`}
-                      >
-                        <span className="text-base">🏫</span>
-                        <div className="leading-tight">
-                          <span className="block font-bold">مالك حضانة</span>
-                          <span className="text-[10px] opacity-80 block font-normal">إضافة وإدارة حضانتي</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
 
                   <div>
                     <label className="block text-xs font-bold text-[#3d4947] mb-1">الاسم الكامل</label>

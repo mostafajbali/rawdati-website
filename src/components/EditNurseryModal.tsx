@@ -104,7 +104,7 @@ export const EditNurseryModal: React.FC<EditNurseryModalProps> = ({
                   )}
                   {isAdmin && (
                     <span>
-                      <strong>أنت في وضع مدير المنصة:</strong> تملك كافة الصلاحيات لتعديل بيانات الحضانة، الرسوم، والترخيص الرسمي.
+                      <strong>أنت في وضع مدير المنصة:</strong> تملك كافة الصلاحيات لتعديل بيانات الحضانة، الرسوم، ورقم الترخيص.
                     </span>
                   )}
                 </div>
@@ -159,7 +159,7 @@ export const EditNurseryModal: React.FC<EditNurseryModalProps> = ({
               {/* Contact info */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#3d4947] mb-1">رقم الهاتف الرسمي</label>
+                  <label className="block text-xs font-bold text-[#3d4947] mb-1">رقم الهاتف للتواصل</label>
                   <input
                     type="tel"
                     value={phone}
@@ -187,7 +187,7 @@ export const EditNurseryModal: React.FC<EditNurseryModalProps> = ({
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs font-bold text-[#0b1c30] flex items-center gap-1.5">
                     <AppIcon name={isAdmin ? "verified" : "lock"} className={`w-4 h-4 ${isAdmin ? 'text-[#00685f]' : 'text-[#ba1a1a]'}`} />
-                    <span>ترخيص وزارة التعليم الرسمي (MOE)</span>
+                    <span>رقم ترخيص الحضانة</span>
                   </label>
                   {isOwner && (
                     <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
@@ -212,14 +212,14 @@ export const EditNurseryModal: React.FC<EditNurseryModalProps> = ({
                         onChange={(e) => setHasLicense(e.target.checked)}
                         className="rounded accent-[#00685f]"
                       />
-                      <span>اعتماد الحضانة وتفعيل شارة التوثيق الذهبية</span>
+                      <span>تفعيل شارة الحضانة المميزة</span>
                     </label>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between bg-white/80 p-2.5 rounded-xl border border-[#e5eeff] text-xs">
-                    <span className="font-bold text-[#0b1c30]">{nursery.licenseNumber || 'معتمدة من وزارة التعليم'}</span>
+                    <span className="font-bold text-[#0b1c30]">{nursery.licenseNumber || 'حضانة مسجلة'}</span>
                     <span className="px-2 py-0.5 rounded-full bg-[#00685f]/15 text-[#00685f] text-[11px] font-bold">
-                      {nursery.hasLicense ? 'حضانة معتمدة رسمياً ✓' : 'قيد التدقيق'}
+                      {nursery.hasLicense ? 'حضانة منشورة ✓' : 'قيد التدقيق'}
                     </span>
                   </div>
                 )}

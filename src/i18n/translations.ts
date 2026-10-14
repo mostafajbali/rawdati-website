@@ -39,7 +39,7 @@ export const translations = {
     popularTagsLabel: 'الوسوم الشائعة:',
 
     // Quick tags
-    tagCertified: 'حضانات مرخصة',
+    tagCertified: 'حضانات مميزة',
     tagInfants: 'تقبل الرضّع (أقل من سنة)',
     tagCctv: 'كاميرات مراقبة',
     tagMontessori: 'منهج منتسوري',
@@ -120,7 +120,7 @@ export const translations = {
     adPackages: 'باقات التسجيل',
     contactAndSupport: 'تواصل ودعم',
     allRightsReserved: 'جميع الحقوق محفوظة © روضتي 2025',
-    demoNote: 'هذا المشروع تجريبي والبيانات المعروضة بيانات عينة',
+    demoNote: 'مشروع تجريبي - البيانات والتقييمات غير حقيقية',
     privacyPolicy: 'سياسة الخصوصية',
     termsConditions: 'الشروط والأحكام',
     faq: 'الأسئلة الشائعة',
@@ -134,7 +134,7 @@ export const translations = {
     contactPersonPlaceholder: 'مثال: أ. سارة الشمري',
     phoneLabel: 'رقم الجوال للتواصل',
     phonePlaceholder: '05XXXXXXXX',
-    emailLabel: 'البريد الإلكتروني الرسمي',
+    emailLabel: 'البريد الإلكتروني للتواصل',
     emailPlaceholder: 'info@nursery.sa',
     cityLabel: 'المدينة',
     selectCity: 'اختر المدينة',
@@ -195,7 +195,7 @@ export const translations = {
     popularTagsLabel: 'Popular Tags:',
 
     // Quick tags
-    tagCertified: 'Licensed Nurseries',
+    tagCertified: 'Featured Nurseries',
     tagInfants: 'Accepts Infants (< 1 year)',
     tagCctv: 'CCTV Monitoring',
     tagMontessori: 'Montessori Curriculum',
@@ -276,7 +276,7 @@ export const translations = {
     adPackages: 'Registration Options',
     contactAndSupport: 'Contact & Support',
     allRightsReserved: 'All rights reserved © Rawdati 2025',
-    demoNote: 'This is a demo project. All data shown is sample data.',
+    demoNote: 'Demo Project - All data and reviews are simulated and not real.',
     privacyPolicy: 'Privacy Policy',
     termsConditions: 'Terms & Conditions',
     faq: 'FAQ',
@@ -290,7 +290,7 @@ export const translations = {
     contactPersonPlaceholder: 'e.g., Sarah Johnson',
     phoneLabel: 'Mobile Number',
     phonePlaceholder: '05XXXXXXXX',
-    emailLabel: 'Official Email',
+    emailLabel: 'Contact Email',
     emailPlaceholder: 'info@nursery.sa',
     cityLabel: 'City',
     selectCity: 'Select City',

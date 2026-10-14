@@ -61,40 +61,32 @@ const DEFAULT_FILTERS: FilterState = {
   quickTag: null
 };
 
-// Initial Registered Users (Seeds directory for demo and admin inspection)
+// Demo Registered Users for Admin Portal (Simulated accounts only - No real user data)
 const INITIAL_USERS: UserProfile[] = [
   {
-    uid: 'user-admin-1',
-    displayName: 'مصطفى الجبلي (أدمن المنصة)',
-    email: 'mostafaaljabaly9@gmail.com',
+    uid: 'demo-admin-1',
+    displayName: 'مشرف المنصة (حساب تجريبي)',
+    email: 'admin.demo@example.com',
     role: 'admin',
-    phone: '0501122334',
+    phone: '050XXXXXXX',
     createdAt: '2026-10-01'
   },
   {
-    uid: 'user-owner-1',
-    displayName: 'أ. منيرة السبيعي (مالكة حضانة)',
-    email: 'monira.owner@rawdati.sa',
+    uid: 'demo-owner-1',
+    displayName: 'مالك حضانة (حساب تجريبي)',
+    email: 'owner.demo@example.com',
     role: 'owner',
-    phone: '0554433221',
+    phone: '055XXXXXXX',
     managedNurseryId: 1,
     createdAt: '2026-10-05'
   },
   {
-    uid: 'user-parent-1',
-    displayName: 'أم ريان (ولي أمر)',
-    email: 'parent.omrayan@gmail.com',
+    uid: 'demo-parent-1',
+    displayName: 'ولي أمر (حساب تجريبي)',
+    email: 'parent.demo@example.com',
     role: 'parent',
-    phone: '0567788990',
+    phone: '056XXXXXXX',
     createdAt: '2026-10-10'
-  },
-  {
-    uid: 'user-parent-2',
-    displayName: 'عبدالله التميمي (ولي أمر)',
-    email: 'tamimi.abdullah@hotmail.com',
-    role: 'parent',
-    phone: '0533322114',
-    createdAt: '2026-10-12'
   }
 ];
 
@@ -152,7 +144,7 @@ const INITIAL_REVIEWS: UserReview[] = [
     nurseryName: 'حضانة عالم الصغار الإبداعية',
     userId: 'user-parent-1',
     userName: 'أم ريان',
-    userBadge: 'ولي أمر معتمد ✓',
+    userBadge: 'ولي أمر مسجّل',
     rating: 5,
     date: '2026-10-12',
     comment: 'بيئة تعليمية فائقة التميز وطاقم متعاون جداً، ابني تطور بشكل ملحوظ في النطق والمهارات الاجتماعية.',
@@ -164,7 +156,7 @@ const INITIAL_REVIEWS: UserReview[] = [
     nurseryName: 'روضة براعم المستقبل النموذجية',
     userId: 'user-parent-2',
     userName: 'عبدالله التميمي',
-    userBadge: 'ولي أمر معتمد ✓',
+    userBadge: 'ولي أمر مسجّل',
     rating: 4.8,
     date: '2026-10-13',
     comment: 'النظافة ومستوى كاميرات المراقبة يمنحان راحة بال استثنائية، والمتابعة اليومية عبر التطبيق ممتازة.',
@@ -247,14 +239,6 @@ export default function App() {
   useEffect(() => {
     testFirestoreConnection();
     fetchAllAdminData().then((data) => {
-      if (data.users && data.users.length > 0) {
-        setUsersList((prev) => {
-          const map = new Map<string, UserProfile>();
-          prev.forEach((u) => map.set(u.uid, u));
-          data.users.forEach((u) => map.set(u.uid, u));
-          return Array.from(map.values());
-        });
-      }
       if (data.nurseryRequests && data.nurseryRequests.length > 0) {
         setNurseryRequests(data.nurseryRequests);
       }
@@ -328,10 +312,7 @@ export default function App() {
 
   // When a new user registers: "اذا كان مش مسجل يسجل بعدين يدخل"
   const handleUserRegisterSuccess = (newUser: UserProfile) => {
-    // 1. Add to users list so admin immediately sees them in Admin Portal
-    setUsersList((prev) => [newUser, ...prev]);
-
-    // 2. Automatically log them in!
+    // 1. Automatically log them in!
     const fakeFirebaseUser = {
       uid: newUser.uid,
       displayName: newUser.displayName,
@@ -414,7 +395,7 @@ export default function App() {
         'https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80'
       ],
       badge: {
-        text: 'معتمدة حديثاً',
+        text: 'منشورة حديثاً',
         type: 'new'
       },
       rating: 5.0,
@@ -423,20 +404,20 @@ export default function App() {
       cityName: request.city,
       district: request.district,
       distance: '1.5 كم',
-      tags: ['معتمدة من وزارة التعليم', 'جديدة', 'بيئة نموذجية'],
+      tags: ['حضانة نموذجية', 'جديدة', 'بيئة تفاعلية'],
       ageGroup: ['infants', 'toddlers', 'preschool'],
       curriculum: ['montessori', 'bilingual'],
       amenities: ['cctv', 'nurse', 'organic_food'],
       hours: ['morning', 'extended'],
       price: request.price || 2200,
-      description: request.notes || 'حضانة معتمدة توفر بيئة تربوية متكاملة وآمنة لرعاية الأطفال والطفولة المبكرة.',
+      description: request.notes || 'حضانة توفر بيئة تربوية متكاملة وآمنة لرعاية الأطفال والطفولة المبكرة.',
       phone: request.managerPhone,
       whatsapp: `966${request.managerPhone.replace(/^0/, '')}`,
       address: `${request.city}، ${request.district}`,
       capacity: 50,
       teacherChildRatio: '1 معلمات لكل 4 أطفال',
       hasLicense: true,
-      licenseNumber: request.licenseNumber || `MOE-${Date.now().toString().slice(-5)}`,
+      licenseNumber: request.licenseNumber || `LIC-${Date.now().toString().slice(-5)}`,
       coordinates: { lat: 24.7136, lng: 46.6753 }
     };
 
@@ -478,7 +459,7 @@ export default function App() {
   const handleAddNewNurseryDirect = (data: Partial<Nursery>) => {
     const directNursery: Nursery = {
       id: Date.now(),
-      name: data.name || 'حضانة جديدة معتمدة',
+      name: data.name || 'حضانة جديدة',
       image: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&auto=format&fit=crop&q=80',
       badge: { text: 'إشراف مباشر', type: 'gold' },
       rating: 5.0,
@@ -487,13 +468,13 @@ export default function App() {
       cityName: data.cityName || 'الرياض',
       district: data.district || 'حي حطين',
       distance: '2.0 كم',
-      tags: ['معتمدة', 'إشراف كامل'],
+      tags: ['بيئة آمنة', 'إشراف كامل'],
       ageGroup: ['infants', 'toddlers'],
       curriculum: ['bilingual', 'montessori'],
       amenities: ['cctv', 'nurse'],
       hours: ['morning'],
       price: data.price || 2500,
-      description: 'حضانة معتمدة رسمياً وموثقة من قبل إدارة المنصة.',
+      description: 'حضانة مضافة ومنشورة في الدليل.',
       hasLicense: true,
       coordinates: { lat: 24.7136, lng: 46.6753 }
     };

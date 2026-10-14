@@ -182,8 +182,8 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Demo Project Notice */}
         <div className="bg-[#00685f]/5 border border-[#00685f]/15 rounded-2xl p-3 text-center">
-          <p className="text-xs font-semibold text-[#00685f]">
-            ℹ️ {t.demoNote}
+          <p className="text-xs font-bold text-[#00685f]">
+            ℹ️ {lang === 'ar' ? 'مشروع تجريبي - البيانات والتقييمات غير حقيقية' : 'Demo Project - All data and reviews are simulated and not real'}
           </p>
         </div>
 

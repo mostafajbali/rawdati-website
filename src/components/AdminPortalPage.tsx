@@ -226,14 +226,17 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
           <div className="flex items-center gap-3">
             <RawdatiLogo size={36} />
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-extrabold text-base sm:text-lg text-white">لوحة تحكم المشرف العام</span>
                 <span className="text-[10px] bg-[#89f5e7]/20 text-[#89f5e7] border border-[#89f5e7]/30 px-2 py-0.5 rounded-full font-bold">
                   مستقلة عن الموقع العام
                 </span>
+                <span className="text-[11px] bg-amber-400 text-amber-950 px-2.5 py-0.5 rounded-full font-extrabold shadow-xs">
+                  وضع تجريبي - بيانات غير حقيقية
+                </span>
               </div>
               <span className="text-xs text-emerald-100/70 hidden sm:block">
-                مراقبة واعتماد الحضانات والمستخدمين والتقييمات
+                مراقبة الحضانات والمستخدمين والتقييمات
               </span>
             </div>
           </div>
@@ -320,7 +323,7 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
             }`}
           >
             <AppIcon name="storefront" className="w-4 h-4" />
-            <span>إدارة الحضانات المعتمدة</span>
+            <span>إدارة الحضانات</span>
             <span className="w-5 h-5 rounded-full bg-white/20 text-white text-[11px] font-bold flex items-center justify-center">
               {nurseries.length}
             </span>
@@ -353,11 +356,20 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-6">
+        {/* Demo Mode Notice Banner */}
+        <div className="bg-amber-50 border border-amber-300 text-amber-900 px-4 py-3 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs font-bold">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+            <span>لوحة التحكم في وضع تجريبي (Demo Mode) — جميع العمليات والبيانات محاكاة ولا يتم عرض أو تخزين بيانات حقيقية</span>
+          </div>
+          <span className="bg-amber-200/80 text-amber-900 px-2.5 py-0.5 rounded-lg text-[11px] font-mono">Simulated Demo</span>
+        </div>
+
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="bg-white p-4 rounded-2xl shadow-xs border border-slate-200">
             <div className="flex items-center justify-between text-slate-500 mb-2">
-              <span className="text-xs font-bold">الحضانات المعتمدة</span>
+              <span className="text-xs font-bold">الحضانات المنشورة</span>
               <AppIcon name="storefront" className="w-4 h-4 text-[#00685f]" />
             </div>
             <div className="text-2xl font-black text-[#0b1c30]">{nurseries.length}</div>
@@ -432,7 +444,7 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
                           }`}
                         >
                           {req.status === 'approved'
-                            ? 'معتمدة ومنشورة'
+                            ? 'منشورة'
                             : req.status === 'rejected'
                             ? 'مرفوضة'
                             : 'قيد المراجعة'}
@@ -507,10 +519,10 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
               <div>
                 <h2 className="text-lg font-extrabold text-[#0b1c30] flex items-center gap-2">
                   <AppIcon name="group" className="w-5 h-5 text-[#00685f]" />
-                  <span>دليل المستخدمين المسجلين في المنصة</span>
+                  <span>دليل المستخدمين (وضع تجريبي للمعاينة)</span>
                 </h2>
                 <p className="text-xs text-slate-500">
-                  عرض كل من سجل كـ (ولي أمر) أو (مالك حضانة) مع إمكانية تعديل صلاحيات الحساب.
+                  عرض حسابات تجريبية افتراضية للمعاينة فقط — لا يتم قراءة أو عرض أي بيانات أو هواتف لمستخدمين حقيقيين لحماية الخصوصية.
                 </p>
               </div>
 
@@ -646,7 +658,7 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
                               : 'bg-amber-100 text-amber-800'
                           }`}
                         >
-                          {rev.status === 'approved' ? 'معتمد ومنشور' : rev.status === 'rejected' ? 'مرفوض' : 'بانتظار المراجعة'}
+                          {rev.status === 'approved' ? 'منشور' : rev.status === 'rejected' ? 'مرفوض' : 'بانتظار المراجعة'}
                         </span>
                       </div>
                       <div className="flex items-center gap-1 text-amber-500 font-bold text-xs">
@@ -690,7 +702,7 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
           </div>
         )}
 
-        {/* TAB 4: Live Nurseries Management (إدارة الحضانات المعتمدة) */}
+        {/* TAB 4: Live Nurseries Management (إدارة الحضانات) */}
         {activeTab === 'nurseries' && (
           <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200 space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">

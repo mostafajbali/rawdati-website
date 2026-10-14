@@ -18,8 +18,8 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
 
   const stats = [
     {
-      value: '+500',
-      label: isAr ? 'حضانة معتمدة بالمملكة' : 'Certified Nurseries Across KSA',
+      value: 'شامل',
+      label: isAr ? 'استكشاف ومقارنة الحضانات' : 'Nursery Exploration & Comparison',
       icon: 'school',
       color: 'text-[#00685f]',
       bg: 'bg-[#00685f]/10'
@@ -39,9 +39,9 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
       bg: 'bg-[#ffddb8]/60'
     },
     {
-      value: '100%',
-      label: isAr ? 'تحقق وفحص ميداني' : 'Field Audited & Verified',
-      icon: 'verified',
+      value: 'شفافية',
+      label: isAr ? 'استعراض المرافق والرسوم' : 'Facility & Fee Transparency',
+      icon: 'check_circle',
       color: 'text-[#00685f]',
       bg: 'bg-[#71f8e4]/30'
     }
@@ -50,10 +50,10 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
   const pillars = [
     {
       icon: 'verified',
-      title: isAr ? 'التراخيص والاعتماد الرسمي' : 'Official Licensing & Accreditation',
+      title: isAr ? 'معايير واشتراطات المرافق' : 'Facility & Care Standards',
       desc: isAr
-        ? 'نوثق شهادات وسجلات وزارة التعليم لضمان الالتزام بأعلى معايير جودة المبنى التعليمي وسلامة البيئة.'
-        : 'Every center is validated against Ministry of Education licensing and safety building codes.'
+        ? 'نستعرض تفاصيل التراخيص واشتراطات السلامة والبيئة التعليمية لمساعدة الوالدين في اتخاذ القرار.'
+        : 'Review facility information, safety measures, and educational environments with complete transparency.'
     },
     {
       icon: 'videocam',
@@ -74,7 +74,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
       title: isAr ? 'استشارات توجيهية محايدة' : 'Unbiased Parent Advisory Support',
       desc: isAr
         ? 'فريق من أخصائيي الطفولة المبكرة يقدم لك استشارة هاتفية مجانية لمساعدتك في اختيار المركز الأنسب.'
-        : 'Our certified childhood specialists provide complimentary phone consultations to guide your final choice.'
+        : 'Our childhood advisors provide complimentary consultations to guide your final choice.'
     }
   ];
 
@@ -114,8 +114,8 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
 
           <p className="text-sm sm:text-base text-[#3d4947] max-w-2xl mx-auto leading-relaxed">
             {isAr
-              ? 'تأسست منصة «روضتي» لتكون الدليل الوطني الأول الذي يجمع دور الحضانة ومراكز ضيافة الأطفال المعتمدة في المملكة العربية السعودية تحت مظلة رقمية موحدة مبنية على معايير الأمان، الشفافية، والجودة التربوية.'
-              : 'Rawdati is the premier authorized digital directory connecting Saudi parents with certified early childhood care, ensuring verified licenses, safety standards, and real feedback.'}
+              ? 'تأسست منصة «روضتي» كمشروع ودليل رقمي يجمع دور الحضانة ومراكز ضيافة الأطفال لتسهيل الاستكشاف والمقارنة واستعراض البيئات التعليمية بشفافية ووضوح.'
+              : 'Rawdati is a showcase digital directory connecting parents with early childhood care centers to easily explore facilities, environments, and community feedback.'}
           </p>
         </div>
 
@@ -136,15 +136,15 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
 
             <p className="text-xs sm:text-sm text-[#3d4947] leading-relaxed">
               {isAr
-                ? 'نؤمن في «روضتي» بأن السنوات الأولى من عمر الطفل هي الركيزة الأساسية لتشكيل شخصيته وذكائه العاطفي والمعرفي. لذلك، نسخر التقنية الحديثة لنزيل عبء البحث والحيرة عن كاهل الوالدين، ونقدم دليلاً ذكياً شفافاً يربطهم بأفضل المراكز المعتمدة مع إمكانية الاطلاع على مرافق الحضانة بالصور الحقيقية وحجز جولات تعريفية مجانية قبل اتخاذ القرار.'
-                : 'At Rawdati, we believe the first five years are foundational for emotional and cognitive growth. We empower parents with verified information, authentic facility photos, live safety features, and direct booking.'}
+                ? 'نؤمن في «روضتي» بأن السنوات الأولى من عمر الطفل هي الركيزة الأساسية لتشكيل شخصيته وذكائه العاطفي والمعرفي. لذلك، نسخر التقنية الحديثة لنزيل عبء البحث والحيرة عن كاهل الوالدين، ونقدم دليلاً ذكياً شفافاً يساعدهم في استكشاف المراكز مع إمكانية الاطلاع على مرافق الحضانة بالصور الحقيقية وحجز جولات تعريفية قبل اتخاذ القرار.'
+                : 'At Rawdati, we believe the first five years are foundational for emotional and cognitive growth. We empower parents to explore centers with detailed information, authentic facility photos, and easy tour scheduling.'}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div className="flex items-start gap-2.5 bg-[#f8f9ff] p-3.5 rounded-2xl border border-[#e5eeff]">
                 <AppIcon name="check_circle" className="w-5 h-5 text-[#00685f] shrink-0 mt-0.5" />
                 <span className="text-xs font-bold text-[#0b1c30]">
-                  {isAr ? 'تراخيص رسمية معتمدة 100%' : '100% MOE Certified Centers'}
+                  {isAr ? 'معلومات وتفاصيل شاملة للمراكز' : 'Comprehensive Center Details'}
                 </span>
               </div>
               <div className="flex items-start gap-2.5 bg-[#f8f9ff] p-3.5 rounded-2xl border border-[#e5eeff]">
@@ -173,7 +173,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({
                 onClick={onExploreNurseries}
                 className="px-5 py-2.5 rounded-2xl bg-[#00685f] hover:bg-[#008378] text-white text-xs sm:text-sm font-bold shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
               >
-                <span>{isAr ? 'استكشف الحضانات المعتمدة' : 'Browse Nurseries'}</span>
+                <span>{isAr ? 'استكشف الحضانات' : 'Browse Nurseries'}</span>
                 <AppIcon name={isAr ? "arrow_left" : "arrow_right"} className="w-4 h-4" />
               </button>
               <button

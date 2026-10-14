@@ -22,7 +22,6 @@ export const WelcomeAuthGate: React.FC<WelcomeAuthGateProps> = ({
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [regRole, setRegRole] = useState<'parent' | 'owner'>('parent');
 
   // Login Form State
   const [loginEmail, setLoginEmail] = useState('');
@@ -54,7 +53,7 @@ export const WelcomeAuthGate: React.FC<WelcomeAuthGateProps> = ({
       displayName: regName.trim(),
       email: regEmail.trim().toLowerCase(),
       phone: regPhone.trim() || undefined,
-      role: regRole,
+      role: 'parent',
       createdAt: new Date().toISOString().split('T')[0]
     };
 
@@ -144,7 +143,7 @@ export const WelcomeAuthGate: React.FC<WelcomeAuthGateProps> = ({
           <RawdatiLogo size={40} />
           <div>
             <span className="font-extrabold text-lg text-white block">منصة روضتي</span>
-            <span className="text-[11px] text-[#89f5e7] block">دليل استكشاف ومقارنة الحضانات المعتمدة</span>
+            <span className="text-[11px] text-[#89f5e7] block">دليل استكشاف ومقارنة الحضانات</span>
           </div>
         </div>
 
@@ -165,7 +164,7 @@ export const WelcomeAuthGate: React.FC<WelcomeAuthGateProps> = ({
           <div className="lg:col-span-6 space-y-6 text-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#89f5e7]/20 text-[#89f5e7] border border-[#89f5e7]/30 text-xs font-bold">
               <span className="w-2 h-2 rounded-full bg-[#89f5e7] animate-pulse" />
-              <span>المنصة الرائدة في المملكة العربية السعودية</span>
+              <span>مشروع تجريبي لاستعراض الحضانات</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
@@ -183,8 +182,8 @@ export const WelcomeAuthGate: React.FC<WelcomeAuthGateProps> = ({
                   <AppIcon name="verified" className="w-5 h-5 text-[#89f5e7]" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white">+500 حضانة معتمدة</h4>
-                  <p className="text-[11px] text-slate-300">مرخصة من وزارة التعليم</p>
+                  <h4 className="text-xs font-bold text-white">اكتشف الحضانات</h4>
+                  <p className="text-[11px] text-slate-300">استعراض المرافق والخدمات</p>
                 </div>
               </div>
 
@@ -267,46 +266,6 @@ export const WelcomeAuthGate: React.FC<WelcomeAuthGateProps> = ({
               {/* TAB 1: REGISTER */}
               {activeTab === 'register' ? (
                 <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
-                  {/* Role Chooser */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                      أنا أسجل بصفتي:
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setRegRole('parent')}
-                        className={`p-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer text-start flex items-center gap-2 ${
-                          regRole === 'parent'
-                            ? 'bg-[#00685f] text-white border-[#00685f] shadow-xs'
-                            : 'bg-[#eff4ff] text-slate-700 border-slate-200 hover:bg-[#dce9ff]'
-                        }`}
-                      >
-                        <span className="text-lg">👨‍👩‍👧</span>
-                        <div className="leading-tight">
-                          <span className="block font-bold">ولي أمر</span>
-                          <span className="text-[10px] opacity-80 block font-normal">بحث واشتراك لطفلي</span>
-                        </div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setRegRole('owner')}
-                        className={`p-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer text-start flex items-center gap-2 ${
-                          regRole === 'owner'
-                            ? 'bg-[#fea619] text-[#684000] border-[#fea619] shadow-xs'
-                            : 'bg-[#eff4ff] text-slate-700 border-slate-200 hover:bg-[#dce9ff]'
-                        }`}
-                      >
-                        <span className="text-lg">🏫</span>
-                        <div className="leading-tight">
-                          <span className="block font-bold">مالك حضانة</span>
-                          <span className="text-[10px] opacity-80 block font-normal">إضافة وإدارة روضتي</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-
                   {/* Name */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label>

@@ -268,25 +268,9 @@ export async function fetchAllAdminData() {
   const quickContacts: QuickContactInquiry[] = [];
   const reviews: UserReview[] = [];
 
-  // Fetch Users
-  try {
-    const uSnap = await getDocs(collection(db, 'users'));
-    uSnap.forEach((d) => {
-      const data = d.data();
-      users.push({
-        uid: d.id,
-        displayName: data.displayName || 'مستخدم مسجل',
-        email: data.email || '',
-        photoURL: data.photoURL,
-        role: data.role || 'parent',
-        phone: data.phone,
-        managedNurseryId: data.managedNurseryId,
-        createdAt: data.createdAt || new Date().toISOString()
-      });
-    });
-  } catch (err) {
-    console.warn('Could not fetch users from Firestore:', err);
-  }
+  // Safety / Privacy in Demo Mode:
+  // Never query the live Firestore 'users' collection for the admin portal.
+  // The Admin dashboard operates strictly on simulated local demo users to preserve privacy.
 
   // Fetch Nursery Requests
   try {
@@ -321,7 +305,7 @@ export async function fetchAllAdminData() {
       tourBookings.push({
         id: d.id,
         nurseryId: data.nurseryId || 1,
-        nurseryName: data.nurseryName || 'حضانة معتمدة',
+        nurseryName: data.nurseryName || 'حضانة مسجلة',
         parentName: data.parentName || '',
         parentPhone: data.parentPhone || '',
         childAge: data.childAge || '',
@@ -370,7 +354,7 @@ export async function fetchAllAdminData() {
         userId: data.userId,
         userName: data.userName || 'ولي أمر',
         userAvatar: data.userAvatar,
-        userBadge: data.tag || 'ولي أمر معتمد ✓',
+        userBadge: data.tag || 'ولي أمر مسجّل',
         rating: data.rating || 5,
         date: 'مؤخراً',
         comment: data.comment || '',
@@ -443,14 +427,10 @@ export async function deleteReviewDocument(reviewId: string): Promise<void> {
   }
 }
 
-// 10. Update User Role (Admin only)
+// 10. Update User Role (Local demo mode only - Does not alter database)
 export async function updateUserRoleInDb(uid: string, newRole: UserRole): Promise<void> {
-  try {
-    const userRef = doc(db, 'users', uid);
-    await updateDoc(userRef, { role: newRole });
-  } catch (err) {
-    console.warn('Update user role offline:', err);
-  }
+  // Safe mode: kept local in demo mode to prevent database tampering and security escalations
+  console.info(`[Demo Mode] Role updated in local state for ${uid} to: ${newRole}`);
 }
 
 export { onAuthStateChanged };

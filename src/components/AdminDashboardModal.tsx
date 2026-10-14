@@ -51,40 +51,32 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     try {
       const data = await fetchAllAdminData();
 
-      // Seed with initial realistic data if DB is fresh
-      const initialUsers: UserProfile[] = data.users.length > 0 ? data.users : [
+      // Demo Mode: users are purely simulated local profiles to protect privacy
+      const initialUsers: UserProfile[] = [
         {
-          uid: 'user-admin-1',
-          displayName: 'مصطفى الجبلي (أدمن المنصة)',
-          email: currentUserEmail || 'mostafaaljabaly9@gmail.com',
+          uid: 'demo-admin-1',
+          displayName: 'مشرف المنصة (حساب تجريبي)',
+          email: 'admin.demo@example.com',
           role: 'admin',
-          phone: '0501122334',
+          phone: '050XXXXXXX',
           createdAt: '2026-10-01'
         },
         {
-          uid: 'user-owner-1',
-          displayName: 'أ. منيرة السبيعي (مالكة حضانة)',
-          email: 'monira.owner@rawdati.sa',
+          uid: 'demo-owner-1',
+          displayName: 'مالك حضانة (حساب تجريبي)',
+          email: 'owner.demo@example.com',
           role: 'owner',
-          phone: '0554433221',
+          phone: '055XXXXXXX',
           managedNurseryId: 1,
           createdAt: '2026-10-05'
         },
         {
-          uid: 'user-parent-1',
-          displayName: 'أم ريان (ولي أمر)',
-          email: 'parent.omrayan@gmail.com',
+          uid: 'demo-parent-1',
+          displayName: 'ولي أمر (حساب تجريبي)',
+          email: 'parent.demo@example.com',
           role: 'parent',
-          phone: '0567788990',
+          phone: '056XXXXXXX',
           createdAt: '2026-10-10'
-        },
-        {
-          uid: 'user-parent-2',
-          displayName: 'عبدالله التميمي (ولي أمر)',
-          email: 'tamimi.abdullah@hotmail.com',
-          role: 'parent',
-          phone: '0533322114',
-          createdAt: '2026-10-12'
         }
       ];
 
@@ -218,7 +210,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
           email: 'rim@stars-academy.sa',
           city: 'الرياض',
           inquiryType: 'join',
-          message: 'نود الانضمام لشبكة الحضانات المعتمدة وتوثيق رخصتنا الرسمية لاستقبال أولياء الأمور.',
+          message: 'نود الانضمام لشبكة الحضانات واستعراض خدماتنا لأولياء الأمور.',
           createdAt: '2026-10-13',
           status: 'new'
         }
@@ -320,10 +312,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               <AppIcon name="admin_panel_settings" className="w-7 h-7 text-[#89f5e7]" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-lg sm:text-xl font-extrabold tracking-tight">لوحة تحكم المشرف العام (Admin Dashboard)</h2>
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#fea619] text-[#684000]">
                   صلاحيات كاملة
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400 text-amber-950">
+                  وضع تجريبي - بيانات غير حقيقية
                 </span>
               </div>
               <p className="text-xs text-[#89f5e7] mt-0.5">
@@ -493,7 +488,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           {isApproved && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#e6f8f4] text-[#00685f] border border-[#008378]/40">
                               <AppIcon name="check_circle" className="w-3.5 h-3.5 text-[#00685f]" />
-                              معتمدة ومنشورة في الدليل ✓
+                              منشورة في الدليل ✓
                             </span>
                           )}
                           {isRejected && (
@@ -567,7 +562,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           {isApproved && (
                             <span className="text-xs text-[#00685f] font-bold flex items-center gap-1">
                               <AppIcon name="task_alt" className="w-4 h-4 text-[#00685f]" />
-                              الحضانة معتمدة وظاهرة لجميع أولياء الأمور
+                              الحضانة منشورة وظاهرة لجميع أولياء الأمور
                             </span>
                           )}
                         </div>
@@ -606,7 +601,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           <div className="flex items-center gap-2">
                             <h4 className="font-bold text-sm text-[#0b1c30]">{rev.userName}</h4>
                             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#89f5e7]/30 text-[#00685f]">
-                              {rev.userBadge || 'ولي أمر معتمد'}
+                              {rev.userBadge || 'ولي أمر مسجّل'}
                             </span>
                           </div>
                           <span className="text-xs text-[#6d7a77]">
@@ -622,7 +617,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         </div>
                         {rev.status === 'approved' ? (
                           <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#e6f8f4] text-[#00685f] border border-[#008378]/30">
-                            معتمد ومنشور ✓
+                            منشور ✓
                           </span>
                         ) : (
                           <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#fff8e6] text-[#684000] border border-[#fea619]/40">

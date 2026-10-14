@@ -394,10 +394,10 @@ export const NurseryQuickContactForm: React.FC<NurseryQuickContactFormProps> = (
                   )}
                 </button>
 
-                <p className="text-[11px] text-[#6d7a77] text-center sm:text-start">
+                <p className="text-[11px] text-[#6d7a77] text-center sm:text-start font-medium">
                   {isAr
-                    ? '🔒 بياناتك محمية ومشفرة وفق أعلى معايير الخصوصية'
-                    : '🔒 Your data is encrypted and kept strictly confidential'}
+                    ? 'ℹ️ هذه نسخة تجريبية ولن يتم إرسال طلبك.'
+                    : 'ℹ️ This is a demo form. Your submission will not be sent.'}
                 </p>
               </div>
             </form>

@@ -10,7 +10,7 @@ export const NURSERIES_DATA: Nursery[] = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAT-_JMMjkF4U-0ijCAIygcS0rA11Q5GMGOhWb-RoD57fq2vgkc01yZigTT4c2CdJ43k-YlvrdHKnD88NDdQQg4kKMv_7D_6k4vHbroBqJ9Yz6NBBdBzYm8-9aa9mTItBLungJa0CdI8YVWcdeSYRrlXGvKyPpbDV-aTsObtAW9eVAj22bPerNiSpZ2P6BJvL-9zkMYoL8oG1MSMCpZLe-zAsK6RCrfE0zMVR7tjJi-_pBNsbGg2UWu'
     ],
     badge: {
-      text: 'معتمدة ذهبية',
+      text: 'مميزة',
       type: 'gold'
     },
     rating: 4.9,
@@ -26,7 +26,7 @@ export const NURSERIES_DATA: Nursery[] = [
     hours: ['morning', 'extended'],
     price: 2200,
     originalPrice: null,
-    description: 'بيئة منتسوري متكاملة ومحفزة لتنمية المهارات الحسية والإدراكية مع إشراف مباشر وطاقم مؤهل ومعتمد من وزارة التعليم. نوفر كاميرات بث مباشر للأمهات ومتابعة لحظية.',
+    description: 'بيئة منتسوري متكاملة ومحفزة لتنمية المهارات الحسية والإدراكية مع إشراف مباشر وطاقم مؤهل ومختص بالطفولة المبكرة. نوفر كاميرات بث مباشر للأمهات ومتابعة لحظية.',
     phone: '0501234567',
     whatsapp: '966501234567',
     address: 'شارع أنس بن مالك، حي الياسمين، الرياض',
@@ -154,7 +154,7 @@ export const NURSERIES_DATA: Nursery[] = [
     cityName: 'الدمام',
     district: 'حي الشاطئ',
     distance: '2.1 كم',
-    tags: ['معلمات معتمدات', 'موسيقى وفنون', 'حافلات مكيفة'],
+    tags: ['معلمات مؤهلات', 'موسيقى وفنون', 'حافلات مكيفة'],
     ageGroup: ['toddlers', 'preschool'],
     curriculum: ['reggio', 'bilingual'],
     amenities: ['transport', 'pool', 'cctv'],
@@ -210,7 +210,7 @@ export const NURSERIES_DATA: Nursery[] = [
     name: 'حضانة عباقرة الغد ثنائية اللغة',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZQKAh9JekT1fbIvm30MQWf6YP0elQAYITCvZRx_eG0_oQdW7_3jxDyulR4dBSShz3B8TNZZiWlOEUPi4OMCJ-ZtC4aAKnX9otWXlNTXek0ssXXw5tZ1jby9FR_-fMwOefxvhwT5EEnS9shpWLAwYDBu47HLBZKkrO1_Z2_SUS1UreBy0DKBT9E5KsS_DCJHFicxnxWLFnMkjvpcKCUjxV_WymKuiGYMrTiu1cRCguDn1oFcYSHoJM',
     badge: {
-      text: 'معتمدة ذهبية',
+      text: 'مميزة',
       type: 'gold'
     },
     rating: 4.9,
@@ -270,7 +270,7 @@ export const NURSERIES_DATA: Nursery[] = [
 ];
 
 export const POPULAR_TAGS = [
-  { id: 'certified', label: 'حضانات معتمدة من وزارة التعليم', icon: 'verified', color: 'secondary' },
+  { id: 'certified', label: 'حضانات مميزة', icon: 'verified', color: 'secondary' },
   { id: 'infants', label: 'تقبل الرضّع (أقل من سنة)', icon: 'child_care', color: 'primary' },
   { id: 'cctv', label: 'كاميرات مراقبة مباشرة', icon: 'videocam', color: 'primary' },
   { id: 'montessori', label: 'منهج منتسوري', icon: 'toys', color: 'secondary' },

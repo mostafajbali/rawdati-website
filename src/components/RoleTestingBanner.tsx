@@ -17,6 +17,11 @@ export const RoleTestingBanner: React.FC<RoleTestingBannerProps> = ({
 }) => {
   const [collapsed, setCollapsed] = useState(false);
 
+  // Security: Never render testing switcher banner in production builds
+  if (!import.meta.env.DEV) {
+    return null;
+  }
+
   return (
     <aside aria-label="شريط اختبار الأدوار والصلاحيات" className="sticky top-16 sm:top-20 z-30 bg-linear-to-r from-[#003833] via-[#004d46] to-[#00685f] text-white shadow-md border-b border-[#89f5e7]/20 transition-all">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">

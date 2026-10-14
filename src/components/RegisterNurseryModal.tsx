@@ -163,7 +163,7 @@ export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-[#3d4947] mb-1">رقم الجوال الرسمي *</label>
+                  <label className="block text-xs font-bold text-[#3d4947] mb-1">رقم الجوال للتواصل *</label>
                   <input
                     type="tel"
                     required
@@ -180,8 +180,11 @@ export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
                   type="submit"
                   className="w-full py-3 bg-[#00685f] hover:bg-[#008378] text-white font-bold text-sm rounded-2xl shadow-sm transition-all cursor-pointer active:scale-95"
                 >
-                  إرسال طلب الانضمام والاعتماد
+                  إرسال طلب تسجيل الحضانة
                 </button>
+                <p className="text-[11px] text-[#6d7a77] text-center pt-2 font-medium">
+                  ℹ️ هذه نسخة تجريبية ولن يتم إرسال طلبك.
+                </p>
               </div>
             </form>
           )}

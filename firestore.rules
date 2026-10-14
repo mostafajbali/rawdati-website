@@ -8,12 +8,9 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    // Role-based authorization: Depends securely on Custom Claims (not client-controlled fields)
     function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.email == 'mostafaaljabaly9@gmail.com' ||
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
-      );
+      return isSignedIn() && request.auth.token.admin == true;
     }
 
     function incoming() {
@@ -29,26 +26,29 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Users Collection
+    // Users Collection: Private to owner only, role restricted to parent/owner and immutable on update
     match /users/{userId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() && request.auth.uid == userId;
-      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create: if isSignedIn() && request.auth.uid == userId 
+        && (incoming().role == 'parent' || incoming().role == 'owner');
+      allow update: if isSignedIn() && request.auth.uid == userId 
+        && incoming().role == existing().role;
       allow delete: if isAdmin();
     }
 
-    // Reviews Collection: Publicly readable for parents exploring nurseries
+    // Reviews Collection: Publicly readable for exploring nurseries, capped facility photos (<=5)
     match /reviews/{reviewId} {
       allow read: if true;
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid
+        && (!('facilityPhotos' in incoming()) || (incoming().facilityPhotos is list && incoming().facilityPhotos.size() <= 5));
+      allow update: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin())
+        && (!('facilityPhotos' in incoming()) || (incoming().facilityPhotos is list && incoming().facilityPhotos.size() <= 5));
       allow delete: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
     }
 
-    // Nursery Registration Requests Collection
-    // Constraint: Nursery Owner CANNOT approve their own nursery! Only Admin can approve!
+    // Nursery Registration Requests Collection: Owner cannot self-approve
     match /nursery_requests/{requestId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && (isAdmin() || resource.data.ownerId == request.auth.uid);
       allow create: if isSignedIn() && incoming().status == 'pending';
       allow update: if isAdmin() || (
         isSignedIn() &&
@@ -73,10 +73,13 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // Favorites Collection: Private to authenticated parent
+    // Favorites Collection: Strictly validated fields and private to authenticated parent
     match /favorites/{favoriteId} {
       allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && incoming().userId == request.auth.uid
+        && incoming().keys().hasAll(['userId', 'nurseryId'])
+        && incoming().nurseryId is number;
       allow delete: if isSignedIn() && existing().userId == request.auth.uid;
     }
   }

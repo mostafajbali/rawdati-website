@@ -127,12 +127,10 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
                 <AppIcon name="check_circle" className="w-9 h-9 text-emerald-600" filled />
               </div>
               <h4 className="text-xl font-black text-[#0b1c30]">
-                {requestType === 'subscription' ? 'تم استلام طلب اشتراكك وحفظه في الداتابيز!' : 'تم تأكيد موعد جولتك بنجاح!'}
+                {requestType === 'subscription' ? 'تم تسجيل طلب التجربة بنجاح!' : 'تم تسجيل موعد الجولة التجريبية!'}
               </h4>
               <p className="text-xs sm:text-sm text-[#3d4947] max-w-sm mx-auto leading-relaxed">
-                تم حفظ بياناتك في قاعدة البيانات المركزية لروضة{' '}
-                <strong className="text-[#00685f]">{nursery.name}</strong> وسيتم التواصل معك على الرقم المسجل{' '}
-                <strong className="text-[#0b1c30] font-mono">{parentPhone}</strong> لإكمال إجراءات القبول.
+                هذه نسخة تجريبية ولن يتم إرسال طلبك إلى الحضانة الحقيقية.
               </p>
 
               <div className="bg-[#eff4ff] p-4 rounded-2xl text-xs text-[#3d4947] text-right space-y-1.5 border border-[#e5eeff]">
@@ -327,12 +325,16 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
                 <AppIcon name="send" className="w-4 h-4 text-[#89f5e7]" />
                 <span>
                   {isSubmitting
-                    ? 'جاري حفظ البيانات في الداتابيز...'
+                    ? 'جاري حفظ البيانات...'
                     : requestType === 'subscription'
-                    ? 'تأكيد طلب الاشتراك وحفظه في الداتابيز'
-                    : 'تأكيد حجز الجولة وحفظ البيانات'}
+                    ? 'تأكيد طلب الاشتراك التجريبي'
+                    : 'تأكيد حجز الجولة التجريبية'}
                 </span>
               </button>
+
+              <p className="text-[11px] text-[#6d7a77] text-center pt-1 font-medium">
+                ℹ️ هذه نسخة تجريبية ولن يتم إرسال طلبك.
+              </p>
             </form>
           )}
         </div>

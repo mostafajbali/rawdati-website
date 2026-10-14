@@ -143,8 +143,11 @@ export const FreeConsultationModal: React.FC<FreeConsultationModalProps> = ({
                   type="submit"
                   className="w-full py-3 bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] font-bold text-sm rounded-2xl shadow-sm transition-all cursor-pointer active:scale-95"
                 >
-                  طلب اتصال هاتفي مجاني
+                  طلب اتصال هاتفي تجريبي
                 </button>
+                <p className="text-[11px] text-[#6d7a77] text-center pt-2 font-medium">
+                  ℹ️ هذه نسخة تجريبية ولن يتم إرسال طلبك.
+                </p>
               </div>
             </form>
           )}
