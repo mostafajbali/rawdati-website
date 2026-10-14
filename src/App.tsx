@@ -1,5 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Nursery, FilterState, UserRole, NurseryRegistrationRequest } from './types.ts';
+import {
+  Nursery,
+  FilterState,
+  UserRole,
+  UserProfile,
+  NurseryRegistrationRequest,
+  UserReview,
+  TourBooking,
+  QuickContactInquiry
+} from './types.ts';
 import { NURSERIES_DATA } from './data/nurseries.ts';
 import { Header } from './components/Header.tsx';
 import { HeroSearch } from './components/HeroSearch.tsx';
@@ -13,23 +22,28 @@ import { FreeConsultationModal } from './components/FreeConsultationModal.tsx';
 import { NurseryDetailsModal } from './components/NurseryDetailsModal.tsx';
 import { RegisterNurseryModal } from './components/RegisterNurseryModal.tsx';
 import { FavoritesDrawer } from './components/FavoritesDrawer.tsx';
-import { AuthModal } from './components/AuthModal.tsx';
+import { UserAuthModal } from './components/UserAuthModal.tsx';
+import { AdminPortalPage } from './components/AdminPortalPage.tsx';
 import { MobileFilterDrawer } from './components/MobileFilterDrawer.tsx';
 import { MobileBottomNav } from './components/MobileBottomNav.tsx';
 import { EducationalProgramsModal } from './components/EducationalProgramsModal.tsx';
 import { CommunityReviewsModal } from './components/CommunityReviewsModal.tsx';
 import { AboutUsSection } from './components/AboutUsSection.tsx';
 import { AppIcon } from './components/AppIcon.tsx';
-import { AdminDashboardModal } from './components/AdminDashboardModal.tsx';
 import { EditNurseryModal } from './components/EditNurseryModal.tsx';
-import { RoleTestingBanner } from './components/RoleTestingBanner.tsx';
 import { Language, translations } from './i18n/translations.ts';
 import {
   auth,
   onAuthStateChanged,
   FirebaseUser,
   logoutUser,
-  testFirestoreConnection
+  testFirestoreConnection,
+  fetchAllAdminData,
+  approveNurseryRequest,
+  rejectNurseryRequest,
+  moderateReviewStatus,
+  updateUserRoleInDb,
+  syncUserProfile
 } from './lib/firebase.ts';
 
 const DEFAULT_FILTERS: FilterState = {
@@ -45,20 +59,145 @@ const DEFAULT_FILTERS: FilterState = {
   quickTag: null
 };
 
+// Initial Registered Users (Seeds directory for demo and admin inspection)
+const INITIAL_USERS: UserProfile[] = [
+  {
+    uid: 'user-admin-1',
+    displayName: 'مصطفى الجبلي (أدمن المنصة)',
+    email: 'mostafaaljabaly9@gmail.com',
+    role: 'admin',
+    phone: '0501122334',
+    createdAt: '2026-10-01'
+  },
+  {
+    uid: 'user-owner-1',
+    displayName: 'أ. منيرة السبيعي (مالكة حضانة)',
+    email: 'monira.owner@rawdati.sa',
+    role: 'owner',
+    phone: '0554433221',
+    managedNurseryId: 1,
+    createdAt: '2026-10-05'
+  },
+  {
+    uid: 'user-parent-1',
+    displayName: 'أم ريان (ولي أمر)',
+    email: 'parent.omrayan@gmail.com',
+    role: 'parent',
+    phone: '0567788990',
+    createdAt: '2026-10-10'
+  },
+  {
+    uid: 'user-parent-2',
+    displayName: 'عبدالله التميمي (ولي أمر)',
+    email: 'tamimi.abdullah@hotmail.com',
+    role: 'parent',
+    phone: '0533322114',
+    createdAt: '2026-10-12'
+  }
+];
+
+// Initial Nursery Requests pending admin approval
+const INITIAL_REQUESTS: NurseryRegistrationRequest[] = [
+  {
+    id: 'req-101',
+    centerName: 'مركز أزهار المستقبل للطفولة المبكرة',
+    city: 'الرياض',
+    district: 'حي الملقا',
+    licenseNumber: 'MOE-RYD-9981',
+    managerName: 'أ. نورة القحطاني',
+    managerPhone: '0505123987',
+    ownerEmail: 'noura.azhar@gmail.com',
+    status: 'pending',
+    createdAt: '2026-10-13',
+    price: 2400,
+    notes: 'مركز مجهز بمنهج مونتيسوري وكاميرات مراقبة متكاملة.'
+  },
+  {
+    id: 'req-102',
+    centerName: 'حضانة براعم الأمل النموذجية',
+    city: 'جدة',
+    district: 'حي الشاطئ',
+    licenseNumber: 'MOE-JED-4421',
+    managerName: 'د. ليلى الغامدي',
+    managerPhone: '0566677889',
+    ownerEmail: 'laila.hope@hotmail.com',
+    status: 'pending',
+    createdAt: '2026-10-12',
+    price: 2100,
+    notes: 'حضانة ثنائية اللغة مع مسبح تعليمي وطاقم تمريضي مقيم.'
+  },
+  {
+    id: 'req-103',
+    centerName: 'روضة أجيال العطاء',
+    city: 'الدمام',
+    district: 'حي الشاطئ الشرقي',
+    licenseNumber: 'MOE-DAM-3310',
+    managerName: 'أ. فهد الدوسري',
+    managerPhone: '0544411223',
+    ownerEmail: 'fahad.ajyal@gmail.com',
+    status: 'approved',
+    createdAt: '2026-10-08',
+    price: 1950,
+    notes: 'تم التحقق من رخصة وزارة التعليم واعتماد المركز.'
+  }
+];
+
+// Initial Reviews
+const INITIAL_REVIEWS: UserReview[] = [
+  {
+    id: 'rev-201',
+    nurseryId: 1,
+    nurseryName: 'حضانة عالم الصغار الإبداعية',
+    userId: 'user-parent-1',
+    userName: 'أم ريان',
+    userBadge: 'ولي أمر معتمد ✓',
+    rating: 5,
+    date: '2026-10-12',
+    comment: 'بيئة تعليمية فائقة التميز وطاقم متعاون جداً، ابني تطور بشكل ملحوظ في النطق والمهارات الاجتماعية.',
+    status: 'approved'
+  },
+  {
+    id: 'rev-202',
+    nurseryId: 2,
+    nurseryName: 'روضة براعم المستقبل النموذجية',
+    userId: 'user-parent-2',
+    userName: 'عبدالله التميمي',
+    userBadge: 'ولي أمر معتمد ✓',
+    rating: 4.8,
+    date: '2026-10-13',
+    comment: 'النظافة ومستوى كاميرات المراقبة يمنحان راحة بال استثنائية، والمتابعة اليومية عبر التطبيق ممتازة.',
+    status: 'pending'
+  }
+];
+
 export default function App() {
   const [lang, setLang] = useState<Language>('ar');
   const t = translations[lang];
   const isAr = lang === 'ar';
 
+  // Standalone Page Routing: 'public' | 'admin'
+  const [pageView, setPageView] = useState<'public' | 'admin'>('public');
+
+  // Admin authentication state
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
   // Dynamic Nurseries state (supports live additions by admin and edits by owners)
   const [nurseriesList, setNurseriesList] = useState<Nursery[]>(NURSERIES_DATA);
 
-  // Role Based Access Control: 'admin' | 'owner' | 'parent'
-  const [currentRole, setCurrentRole] = useState<UserRole>('admin');
-  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
+  // Centralized Application Data
+  const [usersList, setUsersList] = useState<UserProfile[]>(INITIAL_USERS);
+  const [nurseryRequests, setNurseryRequests] = useState<NurseryRegistrationRequest[]>(INITIAL_REQUESTS);
+  const [reviewsList, setReviewsList] = useState<UserReview[]>(INITIAL_REVIEWS);
+  const [tourBookingsList, setTourBookingsList] = useState<any[]>([]);
+  const [quickContactsList, setQuickContactsList] = useState<QuickContactInquiry[]>([]);
+
+  // Public User Role & State
+  const [currentRole, setCurrentRole] = useState<UserRole>('parent');
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+
+  // Modals & Navigation
   const [isEditNurseryModalOpen, setIsEditNurseryModalOpen] = useState(false);
   const [selectedNurseryForEdit, setSelectedNurseryForEdit] = useState<Nursery | null>(null);
-
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [sortBy, setSortBy] = useState<'rating' | 'distance' | 'price' | 'popularity'>('rating');
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
@@ -80,21 +219,58 @@ export default function App() {
   // Navigation states
   const [activeNav, setActiveNav] = useState('home');
   const [activeMobileTab, setActiveMobileTab] = useState<'home' | 'search' | 'favorites' | 'profile'>('home');
-  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
 
-  // Dynamic document direction & language sync
+  // Sync hash for direct access (e.g. #admin)
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash === '#admin') {
+        setPageView('admin');
+      } else {
+        setPageView('public');
+      }
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  // Sync language & direction
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = isAr ? 'rtl' : 'ltr';
   }, [lang, isAr]);
 
+  // Firebase auth & data sync
   useEffect(() => {
     testFirestoreConnection();
+    fetchAllAdminData().then((data) => {
+      if (data.users && data.users.length > 0) {
+        setUsersList((prev) => {
+          const map = new Map<string, UserProfile>();
+          prev.forEach((u) => map.set(u.uid, u));
+          data.users.forEach((u) => map.set(u.uid, u));
+          return Array.from(map.values());
+        });
+      }
+      if (data.nurseryRequests && data.nurseryRequests.length > 0) {
+        setNurseryRequests(data.nurseryRequests);
+      }
+      if (data.reviews && data.reviews.length > 0) {
+        setReviewsList(data.reviews);
+      }
+      if (data.tourBookings) {
+        setTourBookingsList(data.tourBookings);
+      }
+      if (data.quickContacts) {
+        setQuickContactsList(data.quickContacts);
+      }
+    });
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       if (user) {
         if (user.email?.toLowerCase() === 'mostafaaljabaly9@gmail.com') {
-          setCurrentRole('admin');
+          setIsAdminLoggedIn(true);
         }
       }
     });
@@ -105,39 +281,89 @@ export default function App() {
     setLang((prev) => (prev === 'ar' ? 'en' : 'ar'));
   };
 
-  const handleLogout = async () => {
+  // User Authentication Handlers
+  const handleUserLogout = async () => {
     await logoutUser();
     setCurrentUser(null);
     setCurrentRole('parent');
   };
 
-  const handleDemoLogin = (persona: 'admin' | 'owner' | 'parent') => {
-    if (persona === 'admin') {
-      setCurrentUser({
-        uid: 'admin-mostafa',
-        displayName: 'مصطفى الجبلي (مدير المنصة)',
-        email: 'mostafaaljabaly9@gmail.com'
-      } as FirebaseUser);
-      setCurrentRole('admin');
-    } else if (persona === 'owner') {
-      setCurrentUser({
-        uid: 'owner-monira',
-        displayName: 'أ. منيرة السبيعي (مالكة الحضانة)',
-        email: 'monira.owner@rawdati.sa'
-      } as FirebaseUser);
-      setCurrentRole('owner');
-    } else {
-      setCurrentUser({
-        uid: 'parent-omrayan',
-        displayName: 'أم ريان (ولي أمر)',
-        email: 'parent.omrayan@gmail.com'
-      } as FirebaseUser);
-      setCurrentRole('parent');
+  const handleUserLoginSuccess = (user: Partial<UserProfile> & { uid: string; email: string; displayName: string; role: UserRole }) => {
+    const fakeFirebaseUser = {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL || null
+    } as FirebaseUser;
+
+    setCurrentUser(fakeFirebaseUser);
+    setCurrentRole(user.role);
+
+    // If user logging in is admin, allow admin flag
+    if (user.role === 'admin' || user.email === 'mostafaaljabaly9@gmail.com' || user.email === 'admin@rawdati.sa') {
+      setIsAdminLoggedIn(true);
     }
+  };
+
+  // When a new user registers: "اذا كان مش مسجل يسجل بعدين يدخل"
+  const handleUserRegisterSuccess = (newUser: UserProfile) => {
+    // 1. Add to users list so admin immediately sees them in Admin Portal
+    setUsersList((prev) => [newUser, ...prev]);
+
+    // 2. Automatically log them in!
+    const fakeFirebaseUser = {
+      uid: newUser.uid,
+      displayName: newUser.displayName,
+      email: newUser.email,
+      photoURL: newUser.photoURL || null
+    } as FirebaseUser;
+
+    setCurrentUser(fakeFirebaseUser);
+    setCurrentRole(newUser.role);
+
+    // Sync to Firestore in background
+    syncUserProfile(fakeFirebaseUser, newUser.role).catch(console.warn);
+  };
+
+  // Admin Portal Handlers
+  const handleAdminLogin = (email: string): boolean => {
+    const lower = email.toLowerCase().trim();
+    const isOwner = lower === 'mostafaaljabaly9@gmail.com';
+    const isDemoAdmin = lower === 'admin@rawdati.sa';
+    const isUserAdmin = usersList.some((u) => u.email.toLowerCase() === lower && u.role === 'admin');
+
+    if (isOwner || isDemoAdmin || isUserAdmin) {
+      setIsAdminLoggedIn(true);
+      return true;
+    }
+    return false;
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+  };
+
+  const handleReturnToPublic = () => {
+    setPageView('public');
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenAdminPortal = () => {
+    setPageView('admin');
+    window.location.hash = '#admin';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Admin approves new nursery request -> add live to directory
   const handleApproveNurseryToLive = (request: NurseryRegistrationRequest) => {
+    // 1. Update in requests list
+    setNurseryRequests((prev) =>
+      prev.map((r) => (r.id === request.id ? { ...r, status: 'approved' } : r))
+    );
+    approveNurseryRequest(request.id).catch(console.warn);
+
+    // 2. Insert into live nurseries directory
     const cityKeyMap: Record<string, 'riyadh' | 'jeddah' | 'dammam' | 'khobar' | 'makkah'> = {
       'الرياض': 'riyadh',
       'جدة': 'jeddah',
@@ -170,7 +396,7 @@ export default function App() {
       amenities: ['cctv', 'nurse', 'organic_food'],
       hours: ['morning', 'extended'],
       price: request.price || 2200,
-      description: request.notes || 'حضانة معتمدة رسمياً توفر بيئة تربوية متكاملة وآمنة لرعاية الأطفال والطفولة المبكرة.',
+      description: request.notes || 'حضانة معتمدة توفر بيئة تربوية متكاملة وآمنة لرعاية الأطفال والطفولة المبكرة.',
       phone: request.managerPhone,
       whatsapp: `966${request.managerPhone.replace(/^0/, '')}`,
       address: `${request.city}، ${request.district}`,
@@ -184,7 +410,63 @@ export default function App() {
     setNurseriesList((prev) => [newNursery, ...prev]);
   };
 
-  // Owner or Admin edits nursery details
+  const handleRejectNurseryRequest = (reqId: string, reason?: string) => {
+    setNurseryRequests((prev) =>
+      prev.map((r) => (r.id === reqId ? { ...r, status: 'rejected' } : r))
+    );
+    rejectNurseryRequest(reqId, reason).catch(console.warn);
+  };
+
+  const handleUpdateUserRole = (uid: string, newRole: 'parent' | 'owner' | 'admin') => {
+    setUsersList((prev) =>
+      prev.map((u) => (u.uid === uid ? { ...u, role: newRole } : u))
+    );
+    updateUserRoleInDb(uid, newRole).catch(console.warn);
+  };
+
+  const handleApproveReview = (reviewId: string) => {
+    setReviewsList((prev) =>
+      prev.map((r) => (r.id === reviewId ? { ...r, status: 'approved' } : r))
+    );
+    moderateReviewStatus(reviewId, 'approved').catch(console.warn);
+  };
+
+  const handleRejectReview = (reviewId: string) => {
+    setReviewsList((prev) =>
+      prev.map((r) => (r.id === reviewId ? { ...r, status: 'rejected' } : r))
+    );
+    moderateReviewStatus(reviewId, 'rejected').catch(console.warn);
+  };
+
+  const handleDeleteNursery = (id: number) => {
+    setNurseriesList((prev) => prev.filter((n) => n.id !== id));
+  };
+
+  const handleAddNewNurseryDirect = (data: Partial<Nursery>) => {
+    const directNursery: Nursery = {
+      id: Date.now(),
+      name: data.name || 'حضانة جديدة معتمدة',
+      image: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&auto=format&fit=crop&q=80',
+      badge: { text: 'إشراف مباشر', type: 'gold' },
+      rating: 5.0,
+      reviewsCount: 1,
+      city: 'riyadh',
+      cityName: data.cityName || 'الرياض',
+      district: data.district || 'حي حطين',
+      distance: '2.0 كم',
+      tags: ['معتمدة', 'إشراف كامل'],
+      ageGroup: ['infants', 'toddlers'],
+      curriculum: ['bilingual', 'montessori'],
+      amenities: ['cctv', 'nurse'],
+      hours: ['morning'],
+      price: data.price || 2500,
+      description: 'حضانة معتمدة رسمياً وموثقة من قبل إدارة المنصة.',
+      hasLicense: true,
+      coordinates: { lat: 24.7136, lng: 46.6753 }
+    };
+    setNurseriesList((prev) => [directNursery, ...prev]);
+  };
+
   const handleSaveNurseryEdit = (updated: Nursery) => {
     setNurseriesList((prev) => prev.map((n) => (n.id === updated.id ? updated : n)));
     if (selectedNurseryForModal?.id === updated.id) {
@@ -192,67 +474,61 @@ export default function App() {
     }
   };
 
-  // Filter & Search Logic
+  // Filter & Search Logic for Public Directory
   const filteredNurseries = useMemo(() => {
-    return nurseriesList.filter((n) => {
-      // 1. Keyword search
-      if (filters.searchQuery.trim()) {
-        const q = filters.searchQuery.toLowerCase();
-        const matchName = n.name.toLowerCase().includes(q);
-        const matchDistrict = n.district.toLowerCase().includes(q);
-        const matchCity = n.cityName.toLowerCase().includes(q);
-        const matchTag = n.tags.some((tag) => tag.toLowerCase().includes(q));
-        if (!matchName && !matchDistrict && !matchCity && !matchTag) return false;
-      }
+    return nurseriesList
+      .filter((n) => {
+        if (filters.searchQuery.trim()) {
+          const q = filters.searchQuery.toLowerCase();
+          const matchName = n.name.toLowerCase().includes(q);
+          const matchDistrict = n.district.toLowerCase().includes(q);
+          const matchCity = n.cityName.toLowerCase().includes(q);
+          const matchTag = n.tags.some((tag) => tag.toLowerCase().includes(q));
+          if (!matchName && !matchDistrict && !matchCity && !matchTag) return false;
+        }
 
-      // 2. City
-      if (filters.city !== 'all') {
-        if (n.city !== filters.city) return false;
-      }
+        if (filters.city !== 'all') {
+          if (n.city !== filters.city) return false;
+        }
 
-      // 3. Max budget dropdown
-      if (filters.maxBudget > 0) {
-        if (n.price > filters.maxBudget) return false;
-      }
+        if (filters.maxBudget > 0) {
+          if (n.price > filters.maxBudget) return false;
+        }
 
-      // 4. Price range slider
-      if (n.price > filters.priceRange[1]) return false;
+        if (n.price > filters.priceRange[1]) return false;
 
-      // 5. Star rating
-      if (filters.minRating !== null) {
-        if (n.rating < filters.minRating) return false;
-      }
+        if (filters.minRating !== null) {
+          if (n.rating < filters.minRating) return false;
+        }
 
-      // 6. Curriculums
-      if (filters.curriculums.length > 0) {
-        const hasCurriculum = filters.curriculums.some((c) => n.curriculum.includes(c as any));
-        if (!hasCurriculum) return false;
-      }
+        if (filters.curriculums.length > 0) {
+          const hasCurriculum = filters.curriculums.some((c) => n.curriculum.includes(c as any));
+          if (!hasCurriculum) return false;
+        }
 
-      // 7. Quick tag
-      if (filters.quickTag) {
-        if (filters.quickTag === 'certified' && !n.hasLicense) return false;
-        if (filters.quickTag === 'infants' && !n.ageGroup.includes('infants')) return false;
-        if (filters.quickTag === 'cctv' && !n.amenities.includes('cctv')) return false;
-        if (filters.quickTag === 'montessori' && !n.curriculum.includes('montessori')) return false;
-        if (filters.quickTag === 'extended_hours' && !n.hours.includes('extended')) return false;
-      }
+        if (filters.quickTag) {
+          if (filters.quickTag === 'certified' && !n.hasLicense) return false;
+          if (filters.quickTag === 'infants' && !n.ageGroup.includes('infants')) return false;
+          if (filters.quickTag === 'cctv' && !n.amenities.includes('cctv')) return false;
+          if (filters.quickTag === 'montessori' && !n.curriculum.includes('montessori')) return false;
+          if (filters.quickTag === 'extended_hours' && !n.hours.includes('extended')) return false;
+        }
 
-      return true;
-    }).sort((a, b) => {
-      if (sortBy === 'rating') return b.rating - a.rating;
-      if (sortBy === 'price') return a.price - b.price;
-      if (sortBy === 'popularity') return b.reviewsCount - a.reviewsCount;
-      if (sortBy === 'distance') {
-        const distA = parseFloat(a.distance);
-        const distB = parseFloat(b.distance);
-        return distA - distB;
-      }
-      return 0;
-    });
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'rating') return b.rating - a.rating;
+        if (sortBy === 'price') return a.price - b.price;
+        if (sortBy === 'popularity') return b.reviewsCount - a.reviewsCount;
+        if (sortBy === 'distance') {
+          const distA = parseFloat(a.distance);
+          const distB = parseFloat(b.distance);
+          return distA - distB;
+        }
+        return 0;
+      });
   }, [filters, sortBy, nurseriesList]);
 
-  // Paginated Nurseries
   const totalItems = filteredNurseries.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
   const displayedNurseries = filteredNurseries.slice(
@@ -260,7 +536,6 @@ export default function App() {
     currentPage * itemsPerPage
   );
 
-  // Favorite toggle
   const handleToggleFavorite = (id: number) => {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -325,28 +600,39 @@ export default function App() {
     }
   };
 
-  const handleSelectCurriculumFromModal = (curriculumId: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      curriculums: [curriculumId]
-    }));
-    setCurrentPage(1);
-    scrollToDirectory();
-  };
+  // IF PAGE VIEW IS ADMIN: Render standalone Admin Portal Page!
+  if (pageView === 'admin') {
+    return (
+      <AdminPortalPage
+        isAdminLoggedIn={isAdminLoggedIn}
+        onAdminLogin={handleAdminLogin}
+        onAdminLogout={handleAdminLogout}
+        onReturnToPublic={handleReturnToPublic}
+        users={usersList}
+        onUpdateUserRole={handleUpdateUserRole}
+        nurseryRequests={nurseryRequests}
+        onApproveRequest={handleApproveNurseryToLive}
+        onRejectRequest={handleRejectNurseryRequest}
+        reviews={reviewsList}
+        onApproveReview={handleApproveReview}
+        onRejectReview={handleRejectReview}
+        tourBookings={tourBookingsList}
+        quickContacts={quickContactsList}
+        nurseries={nurseriesList}
+        onOpenEditNursery={(n) => {
+          setSelectedNurseryForEdit(n);
+          setIsEditNurseryModalOpen(true);
+        }}
+        onDeleteNursery={handleDeleteNursery}
+        onAddNewNurseryDirect={handleAddNewNurseryDirect}
+      />
+    );
+  }
 
-  const handleExploreTopRatedFromModal = () => {
-    setSortBy('rating');
-    setFilters((prev) => ({
-      ...prev,
-      minRating: 4.8
-    }));
-    setCurrentPage(1);
-    scrollToDirectory();
-  };
-
+  // OTHERWISE: Render standard clean Public Website (NO admin controls, NO banner)
   return (
     <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] flex flex-col font-sans" dir={isAr ? 'rtl' : 'ltr'}>
-      {/* Top Navigation Bar with working actions for all buttons */}
+      {/* Top Public Navigation Bar */}
       <Header
         lang={lang}
         onToggleLang={handleToggleLang}
@@ -359,16 +645,9 @@ export default function App() {
         activeNav={activeNav}
         onNavigate={handleNavigate}
         currentUser={currentUser}
-        onLogout={handleLogout}
+        onLogout={handleUserLogout}
         currentRole={currentRole}
-        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
-      />
-
-      {/* Role Testing & Simulation Banner */}
-      <RoleTestingBanner
-        currentRole={currentRole}
-        onSwitchRole={setCurrentRole}
-        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
+        onOpenAdminPortal={handleOpenAdminPortal}
       />
 
       {/* Main Content Area */}
@@ -403,9 +682,6 @@ export default function App() {
               >
                 <AppIcon name="tune" className="w-4 h-4 text-[#00685f]" />
                 <span>{t.filterBtn}</span>
-                <span className="w-4 h-4 rounded-full bg-[#fea619] text-[#684000] text-[10px] font-bold flex items-center justify-center">
-                  4
-                </span>
               </button>
 
               {/* Sort Control */}
@@ -455,174 +731,145 @@ export default function App() {
             </div>
           </div>
 
-          {/* Directory Content Area */}
-          {viewMode === 'map' ? (
-            <MapView
-              nurseries={filteredNurseries}
-              onSelectNursery={(n) => setSelectedNurseryForModal(n)}
-              onBookTour={(n) => setSelectedNurseryForTour(n)}
-            />
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-              {/* FILTER SIDEBAR (4 cols in desktop - placed based on text direction) */}
-              <div className="hidden lg:block lg:col-span-4">
-                <FilterSidebar
-                  lang={lang}
-                  filters={filters}
-                  setFilters={setFilters}
-                  totalCount={nurseriesList.length}
-                  filteredCount={totalItems}
-                  onReset={handleResetFilters}
-                />
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Desktop Filter Sidebar */}
+            <aside className="hidden lg:block lg:col-span-1">
+              <FilterSidebar
+                lang={lang}
+                filters={filters}
+                setFilters={setFilters}
+                totalCount={totalItems}
+                filteredCount={displayedNurseries.length}
+                onReset={handleResetFilters}
+              />
+            </aside>
 
-              {/* NURSERY CARDS GRID (8 cols in desktop) */}
-              <div className="lg:col-span-8 space-y-8">
-                {displayedNurseries.length === 0 ? (
-                  <div className="bg-white rounded-3xl p-12 text-center border border-[#e5eeff] space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-[#eff4ff] text-[#00685f] mx-auto flex items-center justify-center">
-                      <AppIcon name="search_off" className="w-8 h-8" />
+            {/* Nurseries Cards Grid or Map View */}
+            <div className="lg:col-span-3">
+              {viewMode === 'grid' ? (
+                <>
+                  {displayedNurseries.length === 0 ? (
+                    <div className="text-center py-16 bg-white rounded-3xl border border-[#e5eeff] p-8 shadow-xs">
+                      <div className="w-16 h-16 rounded-full bg-[#89f5e7]/20 flex items-center justify-center mx-auto mb-4">
+                        <AppIcon name="search" className="w-8 h-8 text-[#00685f]" />
+                      </div>
+                      <h3 className="text-lg font-bold text-[#0b1c30] mb-2">{t.noNurseriesFound}</h3>
+                      <p className="text-sm text-[#3d4947] max-w-md mx-auto mb-6">
+                        {t.resetFiltersPrompt}
+                      </p>
+                      <button
+                        onClick={handleResetFilters}
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#00685f] text-white font-bold text-sm shadow-xs hover:bg-[#008378] transition-all cursor-pointer"
+                      >
+                        <AppIcon name="refresh" className="w-4 h-4" />
+                        <span>{t.resetFiltersBtn}</span>
+                      </button>
                     </div>
-                    <h3 className="text-lg font-bold text-[#0b1c30]">{t.noNurseriesFound}</h3>
-                    <p className="text-xs sm:text-sm text-[#6d7a77] max-w-sm mx-auto">
-                      {t.resetFiltersPrompt}
-                    </p>
-                    <button
-                      onClick={handleResetFilters}
-                      className="px-5 py-2.5 rounded-2xl bg-[#00685f] text-white text-xs font-bold shadow-xs hover:bg-[#008378] cursor-pointer"
-                    >
-                      {t.resetFiltersBtn}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                    {displayedNurseries.map((nursery) => (
-                      <NurseryCard
-                        key={nursery.id}
-                        lang={lang}
-                        nursery={nursery}
-                        isFavorite={favorites.includes(nursery.id)}
-                        onToggleFavorite={handleToggleFavorite}
-                        onSelect={(n) => setSelectedNurseryForModal(n)}
-                        onBookTour={(n) => setSelectedNurseryForTour(n)}
-                      />
-                    ))}
-                  </div>
-                )}
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {displayedNurseries.map((nursery) => (
+                        <NurseryCard
+                          key={nursery.id}
+                          nursery={nursery}
+                          lang={lang}
+                          onSelect={(n) => setSelectedNurseryForModal(n)}
+                          onBookTour={(n) => setSelectedNurseryForTour(n)}
+                          isFavorite={favorites.includes(nursery.id)}
+                          onToggleFavorite={handleToggleFavorite}
+                        />
+                      ))}
+                    </div>
+                  )}
 
-                {/* Pagination & Load More Section */}
-                <div className="mt-10 flex flex-col items-center gap-4">
-                  {/* Friendly Rounded Pagination Bar */}
-                  <div className="inline-flex items-center gap-1 p-1 bg-white rounded-full shadow-xs border border-[#e5eeff]">
-                    {/* Previous Button */}
-                    <button
-                      type="button"
-                      disabled={currentPage <= 1}
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-[#6d7a77] hover:bg-[#eff4ff] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                      title={t.previousPage}
-                    >
-                      <AppIcon
-                        name={isAr ? "chevron_right" : "chevron_left"}
-                        className="w-5 h-5"
-                      />
-                    </button>
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="mt-10 flex items-center justify-center gap-2 pt-6 border-t border-[#e5eeff]">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 rounded-full border border-[#bcc9c6] text-xs font-bold text-[#00685f] hover:bg-[#eff4ff] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                      >
+                        {t.previousPage}
+                      </button>
 
-                    {/* Page Numbers */}
-                    {Array.from({ length: totalPages }).map((_, idx) => {
-                      const pageNum = idx + 1;
-                      const isActive = currentPage === pageNum;
-                      return (
-                        <button
-                          key={pageNum}
-                          onClick={() => setCurrentPage(pageNum)}
-                          type="button"
-                          className={`w-10 h-10 rounded-full text-xs font-bold flex items-center justify-center transition-colors cursor-pointer ${
-                            isActive
-                              ? 'bg-[#00685f] text-white shadow-xs'
-                              : 'text-[#0b1c30] hover:bg-[#eff4ff]'
-                          }`}
-                        >
-                          {pageNum}
-                        </button>
-                      );
-                    })}
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                          <button
+                            key={page}
+                            type="button"
+                            onClick={() => {
+                              setCurrentPage(page);
+                              scrollToDirectory();
+                            }}
+                            className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                              currentPage === page
+                                ? 'bg-[#00685f] text-white shadow-xs'
+                                : 'text-[#3d4947] hover:bg-[#eff4ff]'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
 
-                    {/* Next Button */}
-                    <button
-                      type="button"
-                      disabled={currentPage >= totalPages}
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-[#00685f] hover:bg-[#eff4ff] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                      title={t.nextPage}
-                    >
-                      <AppIcon
-                        name={isAr ? "chevron_left" : "chevron_right"}
-                        className="w-5 h-5"
-                      />
-                    </button>
-                  </div>
-
-                  {/* Quick Jump / View More Pill Button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (currentPage < totalPages) {
-                        setCurrentPage((p) => p + 1);
-                      } else {
-                        setCurrentPage(1);
-                      }
-                    }}
-                    className="px-8 py-3 rounded-full bg-[#eff4ff] hover:bg-[#e5eeff] text-[#00685f] text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-xs active:scale-95"
-                  >
-                    <span>{t.viewMoreNurseries} ({totalItems})</span>
-                    <AppIcon name="expand_more" className="w-4 h-4" />
-                  </button>
-
-                  {/* Trust Footer Note */}
-                  <div className="flex items-center gap-2 text-[#6d7a77] text-xs mt-1">
-                    <AppIcon name="verified_user" className="w-4 h-4 text-[#00685f]" filled />
-                    <span>{t.inspectionFooterNote}</span>
-                  </div>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 rounded-full border border-[#bcc9c6] text-xs font-bold text-[#00685f] hover:bg-[#eff4ff] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                      >
+                        {t.nextPage}
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="bg-white rounded-3xl p-4 shadow-xs border border-[#e5eeff] overflow-hidden">
+                  <MapView
+                    nurseries={filteredNurseries}
+                    onSelectNursery={(n) => setSelectedNurseryForModal(n)}
+                    onBookTour={(n) => setSelectedNurseryForTour(n)}
+                  />
                 </div>
-              </div>
+              )}
             </div>
-          )}
+          </div>
         </section>
 
-        {/* 3. About Us / من نحن Section */}
+        {/* 3. Parent Childcare Guide Banner */}
+        <ParentGuideBanner
+          lang={lang}
+          onOpenConsultation={() => setIsConsultationModalOpen(true)}
+        />
+
+        {/* 4. About Us Section */}
         <AboutUsSection
           lang={lang}
           onOpenConsultation={() => setIsConsultationModalOpen(true)}
           onExploreNurseries={scrollToDirectory}
         />
-
-        {/* 4. Reassurance & Parent Guide Banner */}
-        <ParentGuideBanner
-          lang={lang}
-          onOpenConsultation={() => setIsConsultationModalOpen(true)}
-        />
       </main>
 
-      {/* Footer */}
+      {/* Footer with Discrete Admin Portal Entrance */}
       <Footer
         lang={lang}
         onOpenRegister={() => setIsRegisterModalOpen(true)}
         onNavigate={handleNavigate}
         onOpenPrograms={() => setIsProgramsModalOpen(true)}
         onOpenReviews={() => setIsCommunityReviewsModalOpen(true)}
-        onOpenAdmin={() => setIsAdminDashboardOpen(true)}
+        onOpenAdmin={handleOpenAdminPortal}
       />
 
-      {/* Mobile Bottom Navigation Bar */}
+      {/* Mobile Sticky Bottom Nav Bar */}
       <MobileBottomNav
-        lang={lang}
         activeTab={activeMobileTab}
         setActiveTab={handleMobileTabClick}
         favoritesCount={favorites.length}
+        lang={lang}
       />
 
-      {/* Mobile Slide-Up Filter Drawer */}
+      {/* Mobile Filter Drawer */}
       <MobileFilterDrawer
         isOpen={isMobileFilterDrawerOpen}
         onClose={() => setIsMobileFilterDrawerOpen(false)}
@@ -632,7 +879,7 @@ export default function App() {
         onReset={handleResetFilters}
       />
 
-      {/* Nursery Details Modal with User Reviews & RBAC */}
+      {/* Nursery Details Modal */}
       <NurseryDetailsModal
         nursery={selectedNurseryForModal}
         isOpen={Boolean(selectedNurseryForModal)}
@@ -680,16 +927,17 @@ export default function App() {
         onBookTour={(n) => setSelectedNurseryForTour(n)}
       />
 
-      {/* User Auth Modal with Google Sign-in & Role Testing */}
-      <AuthModal
+      {/* Dedicated User Auth Modal (Login if registered, Register first if not registered) */}
+      <UserAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
-        onLogout={handleLogout}
         currentRole={currentRole}
-        onSwitchRole={setCurrentRole}
-        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
-        onDemoLogin={handleDemoLogin}
+        onLogout={handleUserLogout}
+        onUserLoginSuccess={handleUserLoginSuccess}
+        onUserRegisterSuccess={handleUserRegisterSuccess}
+        onOpenRegisterNursery={() => setIsRegisterModalOpen(true)}
+        onOpenFavorites={() => setIsFavoritesDrawerOpen(true)}
       />
 
       {/* Educational Programs Modal */}
@@ -697,7 +945,11 @@ export default function App() {
         isOpen={isProgramsModalOpen}
         onClose={() => setIsProgramsModalOpen(false)}
         lang={lang}
-        onSelectCurriculum={handleSelectCurriculumFromModal}
+        onSelectCurriculum={(curriculumId) => {
+          setFilters((prev) => ({ ...prev, curriculums: [curriculumId] }));
+          setCurrentPage(1);
+          scrollToDirectory();
+        }}
       />
 
       {/* Community Stories & Reviews Modal */}
@@ -705,20 +957,15 @@ export default function App() {
         isOpen={isCommunityReviewsModalOpen}
         onClose={() => setIsCommunityReviewsModalOpen(false)}
         lang={lang}
-        onExploreTopRated={handleExploreTopRatedFromModal}
+        onExploreTopRated={() => {
+          setSortBy('rating');
+          setFilters((prev) => ({ ...prev, minRating: 4.8 }));
+          setCurrentPage(1);
+          scrollToDirectory();
+        }}
       />
 
-      {/* Admin Dashboard Modal (لوحة تحكم المشرف العام) */}
-      <AdminDashboardModal
-        isOpen={isAdminDashboardOpen}
-        onClose={() => setIsAdminDashboardOpen(false)}
-        currentRole={currentRole}
-        onSwitchRole={setCurrentRole}
-        currentUserEmail={currentUser?.email || undefined}
-        onApproveNurseryToLive={handleApproveNurseryToLive}
-      />
-
-      {/* Edit Nursery Modal (تعديل الحضانة لصاحب الحضانة والأدمن) */}
+      {/* Edit Nursery Modal (for Owners and Admins) */}
       <EditNurseryModal
         isOpen={isEditNurseryModalOpen}
         onClose={() => setIsEditNurseryModalOpen(false)}

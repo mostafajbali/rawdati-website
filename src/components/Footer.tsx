@@ -182,10 +182,10 @@ export const Footer: React.FC<FooterProps> = ({
                 <li className="pt-2 border-t border-[#00685f]/15">
                   <button
                     onClick={onOpenAdmin}
-                    className="text-[#00685f] font-bold hover:underline transition-colors cursor-pointer text-start flex items-center gap-1.5"
+                    className="text-[#00685f] hover:text-[#008378] font-bold transition-colors cursor-pointer text-start flex items-center gap-1.5"
                   >
                     <AppIcon name="admin_panel_settings" className="w-4 h-4 text-[#00685f]" />
-                    <span>{lang === 'ar' ? 'لوحة تحكم المشرف (Admin Portal)' : 'Admin Dashboard Portal'}</span>
+                    <span>{lang === 'ar' ? 'صفحة المشرف المستقلة (Admin Portal)' : 'Admin Portal'}</span>
                   </button>
                 </li>
               )}
@@ -212,9 +212,16 @@ export const Footer: React.FC<FooterProps> = ({
             <a href="#terms" className="hover:text-[#00685f] transition-colors">
               {t.termsConditions}
             </a>
-            <a href="#faq" className="hover:text-[#00685f] transition-colors">
-              {t.faq}
-            </a>
+            {onOpenAdmin && (
+              <button
+                type="button"
+                onClick={onOpenAdmin}
+                className="hover:text-[#00685f] text-slate-500 font-semibold transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <AppIcon name="lock" className="w-3.5 h-3.5 text-slate-400" />
+                <span>{lang === 'ar' ? 'بوابة الإدارة' : 'Admin'}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

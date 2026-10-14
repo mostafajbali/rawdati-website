@@ -19,7 +19,7 @@ interface HeaderProps {
   currentUser?: FirebaseUser | null;
   onLogout?: () => void;
   currentRole: UserRole;
-  onOpenAdminDashboard: () => void;
+  onOpenAdminPortal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -34,8 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeNav,
   onNavigate,
   currentUser,
-  currentRole,
-  onOpenAdminDashboard
+  currentRole
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const t = translations[lang];
@@ -132,22 +131,6 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </button>
 
-            {/* Admin Dashboard CTA Button */}
-            <button
-              onClick={onOpenAdminDashboard}
-              className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full font-bold text-xs transition-all cursor-pointer shadow-2xs active:scale-95 whitespace-nowrap ${
-                currentRole === 'admin'
-                  ? 'bg-[#00685f] text-white hover:bg-[#008378] ring-2 ring-[#89f5e7]/50'
-                  : 'bg-[#eff4ff] text-[#00685f] hover:bg-[#dce9ff] border border-[#00685f]/20'
-              }`}
-              title="صفحة ولوحة تحكم المشرف (Admin Dashboard)"
-            >
-              <AppIcon name="admin_panel_settings" className="w-4 h-4 text-inherit" />
-              <span className="hidden sm:inline">لوحة الإدارة</span>
-              {currentRole === 'admin' && (
-                <span className="w-2 h-2 rounded-full bg-[#89f5e7] animate-pulse" />
-              )}
-            </button>
 
             {/* Register Nursery CTA Button (Desktop & Tablet) */}
             <button
@@ -230,16 +213,6 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             ))}
             <div className="pt-2 border-t border-[#e5eeff] flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenAdminDashboard();
-                }}
-                className="w-full py-2.5 rounded-xl bg-[#00685f] text-white font-bold text-sm text-center shadow-xs cursor-pointer active:scale-98 transition-transform flex items-center justify-center gap-2"
-              >
-                <AppIcon name="admin_panel_settings" className="w-4 h-4 text-[#89f5e7]" />
-                <span>لوحة تحكم المشرف (Admin Dashboard)</span>
-              </button>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
