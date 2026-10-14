@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Nursery, FilterState } from './types.ts';
+import { Nursery, FilterState, UserRole, NurseryRegistrationRequest } from './types.ts';
 import { NURSERIES_DATA } from './data/nurseries.ts';
 import { Header } from './components/Header.tsx';
 import { HeroSearch } from './components/HeroSearch.tsx';
@@ -20,6 +20,9 @@ import { EducationalProgramsModal } from './components/EducationalProgramsModal.
 import { CommunityReviewsModal } from './components/CommunityReviewsModal.tsx';
 import { AboutUsSection } from './components/AboutUsSection.tsx';
 import { AppIcon } from './components/AppIcon.tsx';
+import { AdminDashboardModal } from './components/AdminDashboardModal.tsx';
+import { EditNurseryModal } from './components/EditNurseryModal.tsx';
+import { RoleTestingBanner } from './components/RoleTestingBanner.tsx';
 import { Language, translations } from './i18n/translations.ts';
 import {
   auth,
@@ -46,6 +49,15 @@ export default function App() {
   const [lang, setLang] = useState<Language>('ar');
   const t = translations[lang];
   const isAr = lang === 'ar';
+
+  // Dynamic Nurseries state (supports live additions by admin and edits by owners)
+  const [nurseriesList, setNurseriesList] = useState<Nursery[]>(NURSERIES_DATA);
+
+  // Role Based Access Control: 'admin' | 'owner' | 'parent'
+  const [currentRole, setCurrentRole] = useState<UserRole>('admin');
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
+  const [isEditNurseryModalOpen, setIsEditNurseryModalOpen] = useState(false);
+  const [selectedNurseryForEdit, setSelectedNurseryForEdit] = useState<Nursery | null>(null);
 
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [sortBy, setSortBy] = useState<'rating' | 'distance' | 'price' | 'popularity'>('rating');
@@ -80,6 +92,11 @@ export default function App() {
     testFirestoreConnection();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      if (user) {
+        if (user.email?.toLowerCase() === 'mostafaaljabaly9@gmail.com') {
+          setCurrentRole('admin');
+        }
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -88,9 +105,96 @@ export default function App() {
     setLang((prev) => (prev === 'ar' ? 'en' : 'ar'));
   };
 
+  const handleLogout = async () => {
+    await logoutUser();
+    setCurrentUser(null);
+    setCurrentRole('parent');
+  };
+
+  const handleDemoLogin = (persona: 'admin' | 'owner' | 'parent') => {
+    if (persona === 'admin') {
+      setCurrentUser({
+        uid: 'admin-mostafa',
+        displayName: 'مصطفى الجبلي (مدير المنصة)',
+        email: 'mostafaaljabaly9@gmail.com'
+      } as FirebaseUser);
+      setCurrentRole('admin');
+    } else if (persona === 'owner') {
+      setCurrentUser({
+        uid: 'owner-monira',
+        displayName: 'أ. منيرة السبيعي (مالكة الحضانة)',
+        email: 'monira.owner@rawdati.sa'
+      } as FirebaseUser);
+      setCurrentRole('owner');
+    } else {
+      setCurrentUser({
+        uid: 'parent-omrayan',
+        displayName: 'أم ريان (ولي أمر)',
+        email: 'parent.omrayan@gmail.com'
+      } as FirebaseUser);
+      setCurrentRole('parent');
+    }
+  };
+
+  // Admin approves new nursery request -> add live to directory
+  const handleApproveNurseryToLive = (request: NurseryRegistrationRequest) => {
+    const cityKeyMap: Record<string, 'riyadh' | 'jeddah' | 'dammam' | 'khobar' | 'makkah'> = {
+      'الرياض': 'riyadh',
+      'جدة': 'jeddah',
+      'الدمام': 'dammam',
+      'الخبر': 'khobar',
+      'مكة المكرمة': 'makkah'
+    };
+
+    const newNursery: Nursery = {
+      id: Date.now(),
+      name: request.centerName,
+      image: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&auto=format&fit=crop&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80'
+      ],
+      badge: {
+        text: 'معتمدة حديثاً',
+        type: 'new'
+      },
+      rating: 5.0,
+      reviewsCount: 1,
+      city: cityKeyMap[request.city] || 'riyadh',
+      cityName: request.city,
+      district: request.district,
+      distance: '1.5 كم',
+      tags: ['معتمدة من وزارة التعليم', 'جديدة', 'بيئة نموذجية'],
+      ageGroup: ['infants', 'toddlers', 'preschool'],
+      curriculum: ['montessori', 'bilingual'],
+      amenities: ['cctv', 'nurse', 'organic_food'],
+      hours: ['morning', 'extended'],
+      price: request.price || 2200,
+      description: request.notes || 'حضانة معتمدة رسمياً توفر بيئة تربوية متكاملة وآمنة لرعاية الأطفال والطفولة المبكرة.',
+      phone: request.managerPhone,
+      whatsapp: `966${request.managerPhone.replace(/^0/, '')}`,
+      address: `${request.city}، ${request.district}`,
+      capacity: 50,
+      teacherChildRatio: '1 معلمات لكل 4 أطفال',
+      hasLicense: true,
+      licenseNumber: request.licenseNumber || `MOE-${Date.now().toString().slice(-5)}`,
+      coordinates: { lat: 24.7136, lng: 46.6753 }
+    };
+
+    setNurseriesList((prev) => [newNursery, ...prev]);
+  };
+
+  // Owner or Admin edits nursery details
+  const handleSaveNurseryEdit = (updated: Nursery) => {
+    setNurseriesList((prev) => prev.map((n) => (n.id === updated.id ? updated : n)));
+    if (selectedNurseryForModal?.id === updated.id) {
+      setSelectedNurseryForModal(updated);
+    }
+  };
+
   // Filter & Search Logic
   const filteredNurseries = useMemo(() => {
-    return NURSERIES_DATA.filter((n) => {
+    return nurseriesList.filter((n) => {
       // 1. Keyword search
       if (filters.searchQuery.trim()) {
         const q = filters.searchQuery.toLowerCase();
@@ -146,7 +250,7 @@ export default function App() {
       }
       return 0;
     });
-  }, [filters, sortBy]);
+  }, [filters, sortBy, nurseriesList]);
 
   // Paginated Nurseries
   const totalItems = filteredNurseries.length;
@@ -164,8 +268,8 @@ export default function App() {
   };
 
   const favoriteNurseries = useMemo(() => {
-    return NURSERIES_DATA.filter((n) => favorites.includes(n.id));
-  }, [favorites]);
+    return nurseriesList.filter((n) => favorites.includes(n.id));
+  }, [favorites, nurseriesList]);
 
   const handleResetFilters = () => {
     setFilters(DEFAULT_FILTERS);
@@ -255,7 +359,16 @@ export default function App() {
         activeNav={activeNav}
         onNavigate={handleNavigate}
         currentUser={currentUser}
-        onLogout={logoutUser}
+        onLogout={handleLogout}
+        currentRole={currentRole}
+        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
+      />
+
+      {/* Role Testing & Simulation Banner */}
+      <RoleTestingBanner
+        currentRole={currentRole}
+        onSwitchRole={setCurrentRole}
+        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -357,7 +470,7 @@ export default function App() {
                   lang={lang}
                   filters={filters}
                   setFilters={setFilters}
-                  totalCount={NURSERIES_DATA.length}
+                  totalCount={nurseriesList.length}
                   filteredCount={totalItems}
                   onReset={handleResetFilters}
                 />
@@ -498,6 +611,7 @@ export default function App() {
         onNavigate={handleNavigate}
         onOpenPrograms={() => setIsProgramsModalOpen(true)}
         onOpenReviews={() => setIsCommunityReviewsModalOpen(true)}
+        onOpenAdmin={() => setIsAdminDashboardOpen(true)}
       />
 
       {/* Mobile Bottom Navigation Bar */}
@@ -518,7 +632,7 @@ export default function App() {
         onReset={handleResetFilters}
       />
 
-      {/* Nursery Details Modal with User Reviews Component */}
+      {/* Nursery Details Modal with User Reviews & RBAC */}
       <NurseryDetailsModal
         nursery={selectedNurseryForModal}
         isOpen={Boolean(selectedNurseryForModal)}
@@ -529,6 +643,11 @@ export default function App() {
         }}
         isFavorite={selectedNurseryForModal ? favorites.includes(selectedNurseryForModal.id) : false}
         onToggleFavorite={handleToggleFavorite}
+        currentRole={currentRole}
+        onOpenEditNursery={(n) => {
+          setSelectedNurseryForEdit(n);
+          setIsEditNurseryModalOpen(true);
+        }}
       />
 
       {/* Book Tour Modal */}
@@ -544,10 +663,11 @@ export default function App() {
         onClose={() => setIsConsultationModalOpen(false)}
       />
 
-      {/* Register Nursery Modal */}
+      {/* Register Nursery Modal (Owner registers nursery) */}
       <RegisterNurseryModal
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
+        currentUser={currentUser}
       />
 
       {/* Favorites Drawer Modal */}
@@ -560,15 +680,19 @@ export default function App() {
         onBookTour={(n) => setSelectedNurseryForTour(n)}
       />
 
-      {/* User Auth Modal with Google Sign-in */}
+      {/* User Auth Modal with Google Sign-in & Role Testing */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
-        onLogout={logoutUser}
+        onLogout={handleLogout}
+        currentRole={currentRole}
+        onSwitchRole={setCurrentRole}
+        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
+        onDemoLogin={handleDemoLogin}
       />
 
-      {/* Educational Programs Modal (Navbar: البرامج التعليمية) */}
+      {/* Educational Programs Modal */}
       <EducationalProgramsModal
         isOpen={isProgramsModalOpen}
         onClose={() => setIsProgramsModalOpen(false)}
@@ -576,12 +700,31 @@ export default function App() {
         onSelectCurriculum={handleSelectCurriculumFromModal}
       />
 
-      {/* Community Stories & Reviews Modal (Navbar: الآراء والتجارب) */}
+      {/* Community Stories & Reviews Modal */}
       <CommunityReviewsModal
         isOpen={isCommunityReviewsModalOpen}
         onClose={() => setIsCommunityReviewsModalOpen(false)}
         lang={lang}
         onExploreTopRated={handleExploreTopRatedFromModal}
+      />
+
+      {/* Admin Dashboard Modal (لوحة تحكم المشرف العام) */}
+      <AdminDashboardModal
+        isOpen={isAdminDashboardOpen}
+        onClose={() => setIsAdminDashboardOpen(false)}
+        currentRole={currentRole}
+        onSwitchRole={setCurrentRole}
+        currentUserEmail={currentUser?.email || undefined}
+        onApproveNurseryToLive={handleApproveNurseryToLive}
+      />
+
+      {/* Edit Nursery Modal (تعديل الحضانة لصاحب الحضانة والأدمن) */}
+      <EditNurseryModal
+        isOpen={isEditNurseryModalOpen}
+        onClose={() => setIsEditNurseryModalOpen(false)}
+        nursery={selectedNurseryForEdit}
+        currentRole={currentRole}
+        onSave={handleSaveNurseryEdit}
       />
     </div>
   );

@@ -9,6 +9,9 @@
         "displayName": { "type": "string", "maxLength": 100 },
         "email": { "type": "string", "maxLength": 150 },
         "photoURL": { "type": "string", "maxLength": 500 },
+        "role": { "type": "string", "enum": ["admin", "owner", "parent"] },
+        "phone": { "type": "string" },
+        "managedNurseryId": { "type": "number" },
         "createdAt": { "type": "string" }
       },
       "required": ["uid", "email"]
@@ -24,6 +27,7 @@
         "userAvatar": { "type": "string", "maxLength": 500 },
         "rating": { "type": "number" },
         "comment": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
         "facilityPhotos": {
           "type": "array",
           "items": { "type": "string" }
@@ -33,6 +37,42 @@
         "createdAt": { "type": "string" }
       },
       "required": ["nurseryId", "userId", "userName", "rating", "comment"]
+    },
+    "NurseryRequest": {
+      "title": "NurseryRequest",
+      "description": "Registration and verification request submitted by nursery owner",
+      "type": "object",
+      "properties": {
+        "centerName": { "type": "string", "maxLength": 150 },
+        "city": { "type": "string" },
+        "district": { "type": "string" },
+        "licenseNumber": { "type": "string" },
+        "managerName": { "type": "string" },
+        "managerPhone": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "ownerEmail": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "price": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["centerName", "city", "managerPhone", "status"]
+    },
+    "TourBooking": {
+      "title": "TourBooking",
+      "description": "Tour booking request for a nursery",
+      "type": "object",
+      "properties": {
+        "nurseryId": { "type": "number" },
+        "nurseryName": { "type": "string" },
+        "parentName": { "type": "string" },
+        "parentPhone": { "type": "string" },
+        "childAge": { "type": "string" },
+        "visitDate": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["nurseryId", "parentName", "parentPhone", "visitDate"]
     },
     "Favorite": {
       "title": "Favorite",
@@ -49,11 +89,19 @@
   "firestore": {
     "/users/{userId}": {
       "schema": { "$ref": "#/entities/User" },
-      "description": "User profile document"
+      "description": "User profiles with role (admin, owner, parent)"
     },
     "/reviews/{reviewId}": {
       "schema": { "$ref": "#/entities/Review" },
-      "description": "Verified parent reviews with ratings and facility photos"
+      "description": "Verified parent reviews with ratings and moderation status"
+    },
+    "/nursery_requests/{requestId}": {
+      "schema": { "$ref": "#/entities/NurseryRequest" },
+      "description": "Nursery registration requests pending admin verification"
+    },
+    "/tour_bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/TourBooking" },
+      "description": "Tour booking requests submitted by parents"
     },
     "/favorites/{favoriteId}": {
       "schema": { "$ref": "#/entities/Favorite" },

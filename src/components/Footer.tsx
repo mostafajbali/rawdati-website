@@ -9,6 +9,7 @@ interface FooterProps {
   onNavigate: (path: string) => void;
   onOpenPrograms?: () => void;
   onOpenReviews?: () => void;
+  onOpenAdmin?: () => void;
   lang: Language;
 }
 
@@ -17,6 +18,7 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigate,
   onOpenPrograms,
   onOpenReviews,
+  onOpenAdmin,
   lang
 }) => {
   const t = translations[lang];
@@ -176,8 +178,26 @@ export const Footer: React.FC<FooterProps> = ({
                 <AppIcon name="location_on" className="w-4 h-4 text-[#00685f]" />
                 <span>{lang === 'ar' ? 'المملكة العربية السعودية' : 'Kingdom of Saudi Arabia'}</span>
               </li>
+              {onOpenAdmin && (
+                <li className="pt-2 border-t border-[#00685f]/15">
+                  <button
+                    onClick={onOpenAdmin}
+                    className="text-[#00685f] font-bold hover:underline transition-colors cursor-pointer text-start flex items-center gap-1.5"
+                  >
+                    <AppIcon name="admin_panel_settings" className="w-4 h-4 text-[#00685f]" />
+                    <span>{lang === 'ar' ? 'لوحة تحكم المشرف (Admin Portal)' : 'Admin Dashboard Portal'}</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
+        </div>
+
+        {/* Demo Project Notice */}
+        <div className="bg-[#00685f]/5 border border-[#00685f]/15 rounded-2xl p-3 text-center">
+          <p className="text-xs font-semibold text-[#00685f]">
+            ℹ️ {t.demoNote}
+          </p>
         </div>
 
         {/* Sub-footer Copyright */}

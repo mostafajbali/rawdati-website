@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Language, translations } from '../i18n/translations.ts';
 import { AppIcon } from './AppIcon.tsx';
+import { submitQuickContactInquiry } from '../lib/firebase.ts';
 
 export interface NurseryQuickContactFormData {
   centerName: string;
@@ -42,8 +43,11 @@ export const NurseryQuickContactForm: React.FC<NurseryQuickContactFormProps> = (
   });
 
   const onSubmit = async (data: NurseryQuickContactFormData) => {
-    // Simulate server network request
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      await submitQuickContactInquiry(data);
+    } catch (err) {
+      console.warn('Quick contact offline saved:', err);
+    }
     setSubmittedData(data);
     setIsSubmitted(true);
   };

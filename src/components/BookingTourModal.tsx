@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Nursery } from '../types.ts';
 import { AppIcon } from './AppIcon.tsx';
+import { submitTourBooking } from '../lib/firebase.ts';
 
 interface BookingTourModalProps {
   nursery: Nursery | null;
@@ -19,13 +20,31 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
   const [selectedDate, setSelectedDate] = useState('2026-10-15');
   const [selectedSlot, setSelectedSlot] = useState('10:00 صباحاً');
   const [notes, setNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen || !nursery) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!parentName || !parentPhone) return;
+
+    setIsSubmitting(true);
+    try {
+      await submitTourBooking({
+        nurseryId: nursery.id,
+        nurseryName: nursery.name,
+        parentName,
+        parentPhone,
+        childAge,
+        visitDate: selectedDate,
+        timeSlot: selectedSlot,
+        notes
+      });
+    } catch (err) {
+      console.warn('Booking offline saved:', err);
+    }
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Nursery } from '../types.ts';
+import { Nursery, UserRole } from '../types.ts';
 import { NurseryReviewsSection } from './NurseryReviewsSection.tsx';
 import { AppIcon } from './AppIcon.tsx';
 
@@ -10,6 +10,8 @@ interface NurseryDetailsModalProps {
   onBookTour: (nursery: Nursery) => void;
   isFavorite: boolean;
   onToggleFavorite: (id: number) => void;
+  currentRole?: UserRole;
+  onOpenEditNursery?: (nursery: Nursery) => void;
 }
 
 export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
@@ -18,7 +20,9 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
   onClose,
   onBookTour,
   isFavorite,
-  onToggleFavorite
+  onToggleFavorite,
+  currentRole = 'parent',
+  onOpenEditNursery
 }) => {
   const [activeTab, setActiveTab] = useState<'about' | 'curriculum' | 'safety' | 'reviews'>('about');
 
@@ -61,6 +65,15 @@ export const NurseryDetailsModal: React.FC<NurseryDetailsModalProps> = ({
                 <span className="px-3 py-1 rounded-full bg-[#fea619] text-[#684000] text-xs font-bold shadow-sm">
                   {nursery.badge.text}
                 </span>
+              )}
+              {(currentRole === 'owner' || currentRole === 'admin') && onOpenEditNursery && (
+                <button
+                  onClick={() => onOpenEditNursery(nursery)}
+                  className="px-3 py-1.5 rounded-full bg-white/95 hover:bg-white text-[#00685f] text-xs font-bold flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95"
+                >
+                  <AppIcon name="edit" className="w-3.5 h-3.5 text-[#00685f]" />
+                  <span>{currentRole === 'admin' ? 'تعديل (أدمن)' : 'تعديل بيانات الحضانة'}</span>
+                </button>
               )}
             </div>
           </div>

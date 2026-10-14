@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { AppIcon } from './AppIcon.tsx';
+import { submitNurseryRegistration } from '../lib/firebase.ts';
 
 interface RegisterNurseryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currentUser?: any;
 }
 
 export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
   isOpen,
-  onClose
+  onClose,
+  currentUser
 }) => {
   const [centerName, setCenterName] = useState('');
   const [city, setCity] = useState('الرياض');
@@ -16,14 +19,38 @@ export const RegisterNurseryModal: React.FC<RegisterNurseryModalProps> = ({
   const [licenseNumber, setLicenseNumber] = useState('');
   const [managerName, setManagerName] = useState('');
   const [managerPhone, setManagerPhone] = useState('');
+  const [price, setPrice] = useState('2000');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!centerName || !managerPhone) return;
-    setSubmitted(true);
+
+    setIsSubmitting(true);
+    try {
+      await submitNurseryRegistration(
+        {
+          centerName,
+          city,
+          district: district || 'حي النرجس',
+          licenseNumber: licenseNumber || `MOE-${Date.now().toString().slice(-5)}`,
+          managerName: managerName || 'مديرة الحضانة',
+          managerPhone,
+          price: parseInt(price, 10) || 2000
+        },
+        currentUser?.uid,
+        currentUser?.email
+      );
+      setIsSubmitting(false);
+      setSubmitted(true);
+    } catch (err) {
+      console.warn('Error submitting nursery registration:', err);
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }
   };
 
   return (

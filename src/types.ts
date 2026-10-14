@@ -76,9 +76,52 @@ export interface FacilityPhoto {
   category: 'classroom' | 'playground' | 'sleep' | 'dining' | 'activities';
 }
 
+export type UserRole = 'admin' | 'owner' | 'parent';
+
+export interface UserProfile {
+  uid: string;
+  displayName: string;
+  email: string;
+  photoURL?: string;
+  role: UserRole;
+  phone?: string;
+  managedNurseryId?: number;
+  createdAt: string;
+}
+
+export interface NurseryRegistrationRequest {
+  id: string;
+  centerName: string;
+  city: string;
+  district: string;
+  licenseNumber?: string;
+  managerName: string;
+  managerPhone: string;
+  ownerId?: string;
+  ownerEmail?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  notes?: string;
+  price?: number;
+}
+
+export interface QuickContactInquiry {
+  id: string;
+  centerName: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  city: string;
+  inquiryType: string;
+  message: string;
+  createdAt: string;
+  status?: 'new' | 'contacted' | 'resolved';
+}
+
 export interface UserReview {
   id: string;
   nurseryId: number;
+  nurseryName?: string;
   userId: string;
   userName: string;
   userAvatar?: string;
@@ -90,4 +133,5 @@ export interface UserReview {
   childAgeGroup?: string;
   helpfulCount?: number;
   verifiedParent?: boolean;
+  status?: 'pending' | 'approved' | 'rejected';
 }

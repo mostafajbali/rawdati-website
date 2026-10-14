@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
 import { signInWithGoogle, FirebaseUser } from '../lib/firebase.ts';
 import { AppIcon } from './AppIcon.tsx';
+import { UserRole } from '../types.ts';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentUser?: FirebaseUser | null;
   onLogout?: () => void;
+  currentRole: UserRole;
+  onSwitchRole: (newRole: UserRole) => void;
+  onOpenAdminDashboard: () => void;
+  onDemoLogin?: (persona: 'admin' | 'owner' | 'parent') => void;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   currentUser,
-  onLogout
+  onLogout,
+  currentRole,
+  onSwitchRole,
+  onOpenAdminDashboard,
+  onDemoLogin
 }) => {
   const [phone, setPhone] = useState('');
   const [step, setStep] = useState<'options' | 'phone' | 'otp' | 'success'>('options');
@@ -87,13 +96,64 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               )}
               <div>
                 <h4 className="font-bold text-base text-[#0b1c30]">
-                  {currentUser.displayName || 'ولي أمر مسجل'}
+                  {currentUser.displayName || 'مستخدم مسجل'}
                 </h4>
                 <p className="text-xs text-[#6d7a77]">{currentUser.email}</p>
-                <span className="inline-block mt-1 text-[11px] font-bold text-[#00685f] bg-[#89f5e7]/30 px-2.5 py-0.5 rounded-full">
-                  حساب معتمد في روضتي ✓
-                </span>
+                <div className="mt-2 flex items-center justify-center gap-1.5 flex-wrap">
+                  <span className="text-[11px] font-bold text-[#00685f] bg-[#89f5e7]/30 px-3 py-1 rounded-full">
+                    {currentRole === 'admin'
+                      ? '👑 مدير المنصة (Admin)'
+                      : currentRole === 'owner'
+                      ? '🏫 صاحب حضانة (Owner)'
+                      : '👨‍👩‍👧 ولي أمر (Parent)'}
+                  </span>
+                </div>
               </div>
+
+              {/* Role Switcher Box for Testing */}
+              <div className="p-3 bg-[#eff4ff] rounded-2xl border border-[#dce9ff] text-start space-y-2">
+                <span className="text-[11px] font-bold text-[#00685f] block">اختبار وتبديل الصلاحية النشطة:</span>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <button
+                    onClick={() => onSwitchRole('parent')}
+                    className={`py-1.5 px-2 rounded-xl text-[11px] font-bold cursor-pointer transition-all ${
+                      currentRole === 'parent' ? 'bg-[#00685f] text-white' : 'bg-white text-[#3d4947] hover:bg-[#dce9ff]'
+                    }`}
+                  >
+                    ولي أمر
+                  </button>
+                  <button
+                    onClick={() => onSwitchRole('owner')}
+                    className={`py-1.5 px-2 rounded-xl text-[11px] font-bold cursor-pointer transition-all ${
+                      currentRole === 'owner' ? 'bg-[#fea619] text-[#684000]' : 'bg-white text-[#3d4947] hover:bg-[#ffe5a3]'
+                    }`}
+                  >
+                    مالك حضانة
+                  </button>
+                  <button
+                    onClick={() => onSwitchRole('admin')}
+                    className={`py-1.5 px-2 rounded-xl text-[11px] font-bold cursor-pointer transition-all ${
+                      currentRole === 'admin' ? 'bg-[#008378] text-white' : 'bg-white text-[#3d4947] hover:bg-[#dce9ff]'
+                    }`}
+                  >
+                    أدمن
+                  </button>
+                </div>
+              </div>
+
+              {/* Admin Dashboard CTA Button */}
+              {currentRole === 'admin' && (
+                <button
+                  onClick={() => {
+                    onClose();
+                    onOpenAdminDashboard();
+                  }}
+                  className="w-full py-2.5 rounded-2xl bg-[#00685f] hover:bg-[#008378] text-white font-bold text-xs shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <AppIcon name="admin_panel_settings" className="w-4 h-4 text-[#89f5e7]" />
+                  <span>فتح لوحة تحكم المشرف العام</span>
+                </button>
+              )}
 
               <div className="pt-2 border-t border-[#e5eeff] space-y-2">
                 <button
@@ -147,6 +207,49 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </svg>
                 <span>{loadingGoogle ? 'جاري الاتصال...' : 'الدخول بحساب Google'}</span>
               </button>
+
+              <div className="flex items-center gap-2 text-xs text-[#6d7a77] my-1">
+                <div className="flex-1 h-px bg-[#e5eeff]" />
+                <span>أو اختبار الأدوار بضغطة زر</span>
+                <div className="flex-1 h-px bg-[#e5eeff]" />
+              </div>
+
+              {/* Demo Role Personas for instant testing */}
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onDemoLogin) onDemoLogin('parent');
+                    onClose();
+                  }}
+                  className="p-2.5 rounded-2xl bg-[#eff4ff] hover:bg-[#dce9ff] text-[#00685f] text-center border border-[#dce9ff] cursor-pointer transition-all"
+                >
+                  <span className="block text-base mb-0.5">👨‍👩‍👧</span>
+                  <span className="text-[11px] font-bold block">ولي أمر</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onDemoLogin) onDemoLogin('owner');
+                    onClose();
+                  }}
+                  className="p-2.5 rounded-2xl bg-[#fff8e6] hover:bg-[#ffe5a3] text-[#684000] text-center border border-[#fea619]/30 cursor-pointer transition-all"
+                >
+                  <span className="block text-base mb-0.5">🏫</span>
+                  <span className="text-[11px] font-bold block">مالك حضانة</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onDemoLogin) onDemoLogin('admin');
+                    onClose();
+                  }}
+                  className="p-2.5 rounded-2xl bg-[#eefaf7] hover:bg-[#c3eee4] text-[#00685f] text-center border border-[#008378]/30 cursor-pointer transition-all"
+                >
+                  <span className="block text-base mb-0.5">👑</span>
+                  <span className="text-[11px] font-bold block">مدير (أدمن)</span>
+                </button>
+              </div>
 
               <div className="flex items-center gap-2 text-xs text-[#6d7a77] my-1">
                 <div className="flex-1 h-px bg-[#e5eeff]" />

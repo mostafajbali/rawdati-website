@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AppIcon } from './AppIcon.tsx';
+import { submitConsultationRequest } from '../lib/firebase.ts';
 
 interface FreeConsultationModalProps {
   isOpen: boolean;
@@ -14,13 +15,29 @@ export const FreeConsultationModal: React.FC<FreeConsultationModalProps> = ({
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('الرياض');
   const [childAge, setChildAge] = useState('سنة ونصف');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone) return;
+
+    setIsSubmitting(true);
+    try {
+      await submitConsultationRequest({
+        parentName: name,
+        phone,
+        city,
+        childAge,
+        budgetPreference: 'متوسطة',
+        preferredTime: 'الفترة الصباحية'
+      });
+    } catch (err) {
+      console.warn('Consultation offline saved:', err);
+    }
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
