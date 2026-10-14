@@ -23,6 +23,7 @@ import { NurseryDetailsModal } from './components/NurseryDetailsModal.tsx';
 import { RegisterNurseryModal } from './components/RegisterNurseryModal.tsx';
 import { FavoritesDrawer } from './components/FavoritesDrawer.tsx';
 import { UserAuthModal } from './components/UserAuthModal.tsx';
+import { WelcomeAuthGate } from './components/WelcomeAuthGate.tsx';
 import { AdminPortalPage } from './components/AdminPortalPage.tsx';
 import { MobileFilterDrawer } from './components/MobileFilterDrawer.tsx';
 import { MobileBottomNav } from './components/MobileBottomNav.tsx';
@@ -43,7 +44,8 @@ import {
   rejectNurseryRequest,
   moderateReviewStatus,
   updateUserRoleInDb,
-  syncUserProfile
+  syncUserProfile,
+  saveUserRegistrationToDb
 } from './lib/firebase.ts';
 
 const DEFAULT_FILTERS: FilterState = {
@@ -194,6 +196,7 @@ export default function App() {
   // Public User Role & State
   const [currentRole, setCurrentRole] = useState<UserRole>('parent');
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [hasPassedWelcomeGate, setHasPassedWelcomeGate] = useState<boolean>(false);
 
   // Modals & Navigation
   const [isEditNurseryModalOpen, setIsEditNurseryModalOpen] = useState(false);
@@ -298,10 +301,28 @@ export default function App() {
 
     setCurrentUser(fakeFirebaseUser);
     setCurrentRole(user.role);
+    setHasPassedWelcomeGate(true);
 
-    // If user logging in is admin, allow admin flag
-    if (user.role === 'admin' || user.email === 'mostafaaljabaly9@gmail.com' || user.email === 'admin@rawdati.sa') {
+    const lowerEmail = (user.email || '').toLowerCase().trim();
+    const isAdmin =
+      user.role === 'admin' ||
+      lowerEmail === 'admin' ||
+      lowerEmail === 'admin@rawdati.sa' ||
+      lowerEmail === 'mostafaaljabaly9@gmail.com' ||
+      usersList.some((u) => (u.email.toLowerCase() === lowerEmail || u.displayName.toLowerCase() === lowerEmail) && u.role === 'admin');
+
+    if (isAdmin) {
+      // إذا سجل الدخول كادمن ابعته على صفحة الادمن
       setIsAdminLoggedIn(true);
+      setPageView('admin');
+      window.location.hash = '#admin';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // واذا مستخدم ابعته على صفحة المستخدمين
+      setIsAdminLoggedIn(false);
+      setPageView('public');
+      window.location.hash = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -320,17 +341,24 @@ export default function App() {
 
     setCurrentUser(fakeFirebaseUser);
     setCurrentRole(newUser.role);
+    setHasPassedWelcomeGate(true);
 
-    // Sync to Firestore in background
-    syncUserProfile(fakeFirebaseUser, newUser.role).catch(console.warn);
+    // Send to public page for users
+    setIsAdminLoggedIn(false);
+    setPageView('public');
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 3. Save to database (Firestore)!
+    saveUserRegistrationToDb(newUser).catch(console.warn);
   };
 
   // Admin Portal Handlers
   const handleAdminLogin = (email: string): boolean => {
     const lower = email.toLowerCase().trim();
     const isOwner = lower === 'mostafaaljabaly9@gmail.com';
-    const isDemoAdmin = lower === 'admin@rawdati.sa';
-    const isUserAdmin = usersList.some((u) => u.email.toLowerCase() === lower && u.role === 'admin');
+    const isDemoAdmin = lower === 'admin' || lower === 'admin@rawdati.sa';
+    const isUserAdmin = usersList.some((u) => (u.email.toLowerCase() === lower || u.displayName.toLowerCase() === lower) && u.role === 'admin');
 
     if (isOwner || isDemoAdmin || isUserAdmin) {
       setIsAdminLoggedIn(true);
@@ -341,6 +369,11 @@ export default function App() {
 
   const handleAdminLogout = () => {
     setIsAdminLoggedIn(false);
+    setCurrentUser(null);
+    setCurrentRole('parent');
+    setPageView('public');
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleReturnToPublic = () => {
@@ -629,7 +662,18 @@ export default function App() {
     );
   }
 
-  // OTHERWISE: Render standard clean Public Website (NO admin controls, NO banner)
+  // IF NOT ADMIN AND FIRST TIME VISITOR (NOT LOGGED IN & NOT GUEST): Show Welcome Registration Gate
+  if (pageView === 'public' && !hasPassedWelcomeGate && !currentUser) {
+    return (
+      <WelcomeAuthGate
+        onRegisterSuccess={handleUserRegisterSuccess}
+        onLoginSuccess={handleUserLoginSuccess}
+        onContinueAsGuest={() => setHasPassedWelcomeGate(true)}
+      />
+    );
+  }
+
+  // OTHERWISE: Render standard clean Public Website (with visitor mode, directory, search)
   return (
     <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] flex flex-col font-sans" dir={isAr ? 'rtl' : 'ltr'}>
       {/* Top Public Navigation Bar */}
@@ -647,7 +691,6 @@ export default function App() {
         currentUser={currentUser}
         onLogout={handleUserLogout}
         currentRole={currentRole}
-        onOpenAdminPortal={handleOpenAdminPortal}
       />
 
       {/* Main Content Area */}
@@ -851,14 +894,13 @@ export default function App() {
         />
       </main>
 
-      {/* Footer with Discrete Admin Portal Entrance */}
+      {/* Footer without Admin Portal Entrance */}
       <Footer
         lang={lang}
         onOpenRegister={() => setIsRegisterModalOpen(true)}
         onNavigate={handleNavigate}
         onOpenPrograms={() => setIsProgramsModalOpen(true)}
         onOpenReviews={() => setIsCommunityReviewsModalOpen(true)}
-        onOpenAdmin={handleOpenAdminPortal}
       />
 
       {/* Mobile Sticky Bottom Nav Bar */}
@@ -897,11 +939,13 @@ export default function App() {
         }}
       />
 
-      {/* Book Tour Modal */}
+      {/* Book Tour & Subscription Modal */}
       <BookingTourModal
         nursery={selectedNurseryForTour}
         isOpen={Boolean(selectedNurseryForTour)}
         onClose={() => setSelectedNurseryForTour(null)}
+        currentUser={currentUser}
+        onRequireAuth={() => setIsAuthModalOpen(true)}
       />
 
       {/* Free Childcare Consultation Modal */}

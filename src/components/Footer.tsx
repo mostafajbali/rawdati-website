@@ -9,7 +9,6 @@ interface FooterProps {
   onNavigate: (path: string) => void;
   onOpenPrograms?: () => void;
   onOpenReviews?: () => void;
-  onOpenAdmin?: () => void;
   lang: Language;
 }
 
@@ -18,7 +17,6 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigate,
   onOpenPrograms,
   onOpenReviews,
-  onOpenAdmin,
   lang
 }) => {
   const t = translations[lang];
@@ -178,17 +176,6 @@ export const Footer: React.FC<FooterProps> = ({
                 <AppIcon name="location_on" className="w-4 h-4 text-[#00685f]" />
                 <span>{lang === 'ar' ? 'المملكة العربية السعودية' : 'Kingdom of Saudi Arabia'}</span>
               </li>
-              {onOpenAdmin && (
-                <li className="pt-2 border-t border-[#00685f]/15">
-                  <button
-                    onClick={onOpenAdmin}
-                    className="text-[#00685f] hover:text-[#008378] font-bold transition-colors cursor-pointer text-start flex items-center gap-1.5"
-                  >
-                    <AppIcon name="admin_panel_settings" className="w-4 h-4 text-[#00685f]" />
-                    <span>{lang === 'ar' ? 'صفحة المشرف المستقلة (Admin Portal)' : 'Admin Portal'}</span>
-                  </button>
-                </li>
-              )}
             </ul>
           </div>
         </div>
@@ -212,16 +199,6 @@ export const Footer: React.FC<FooterProps> = ({
             <a href="#terms" className="hover:text-[#00685f] transition-colors">
               {t.termsConditions}
             </a>
-            {onOpenAdmin && (
-              <button
-                type="button"
-                onClick={onOpenAdmin}
-                className="hover:text-[#00685f] text-slate-500 font-semibold transition-colors cursor-pointer flex items-center gap-1"
-              >
-                <AppIcon name="lock" className="w-3.5 h-3.5 text-slate-400" />
-                <span>{lang === 'ar' ? 'بوابة الإدارة' : 'Admin'}</span>
-              </button>
-            )}
           </div>
         </div>
       </div>

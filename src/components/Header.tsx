@@ -19,7 +19,6 @@ interface HeaderProps {
   currentUser?: FirebaseUser | null;
   onLogout?: () => void;
   currentRole: UserRole;
-  onOpenAdminPortal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({

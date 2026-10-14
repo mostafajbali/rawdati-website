@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Nursery } from '../types.ts';
 import { AppIcon } from './AppIcon.tsx';
-import { submitTourBooking } from '../lib/firebase.ts';
+import { submitTourBooking, FirebaseUser } from '../lib/firebase.ts';
 
 interface BookingTourModalProps {
   nursery: Nursery | null;
   isOpen: boolean;
   onClose: () => void;
+  currentUser?: FirebaseUser | null;
+  onRequireAuth?: () => void;
 }
 
 export const BookingTourModal: React.FC<BookingTourModalProps> = ({
   nursery,
   isOpen,
-  onClose
+  onClose,
+  currentUser,
+  onRequireAuth
 }) => {
-  const [parentName, setParentName] = useState('');
+  const [requestType, setRequestType] = useState<'subscription' | 'tour'>('subscription');
+  const [parentName, setParentName] = useState(currentUser?.displayName || '');
   const [parentPhone, setParentPhone] = useState('');
   const [childAge, setChildAge] = useState('1 - 2 سنة');
+  const [planDuration, setPlanDuration] = useState<'monthly' | 'term' | 'yearly'>('monthly');
   const [selectedDate, setSelectedDate] = useState('2026-10-15');
   const [selectedSlot, setSelectedSlot] = useState('10:00 صباحاً');
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (currentUser?.displayName) {
+      setParentName(currentUser.displayName);
+    }
+  }, [currentUser]);
 
   if (!isOpen || !nursery) return null;
 
@@ -31,16 +43,19 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      await submitTourBooking({
-        nurseryId: nursery.id,
-        nurseryName: nursery.name,
-        parentName,
-        parentPhone,
-        childAge,
-        visitDate: selectedDate,
-        timeSlot: selectedSlot,
-        notes
-      });
+      await submitTourBooking(
+        {
+          nurseryId: nursery.id,
+          nurseryName: nursery.name,
+          parentName,
+          parentPhone,
+          childAge,
+          visitDate: selectedDate,
+          timeSlot: selectedSlot,
+          notes: `[نوع الطلب: ${requestType === 'subscription' ? 'اشتراك وتسجيل طفل' : 'جولة تعريفية'}] [الباقة: ${planDuration}] ${notes}`
+        },
+        currentUser?.uid
+      );
     } catch (err) {
       console.warn('Booking offline saved:', err);
     }
@@ -54,16 +69,21 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200" dir="rtl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200"
+      dir="rtl"
+    >
       <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-[#e5eeff] animate-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="bg-[#00685f] p-5 text-white flex items-center justify-between">
+        <div className="bg-linear-to-r from-[#00685f] to-[#008378] p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center">
-              <AppIcon name="calendar_month" className="w-5 h-5 text-white" />
+              <AppIcon name="how_to_reg" className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-base sm:text-lg">حجز جولة تعريفية مجانية</h3>
+              <h3 className="font-extrabold text-base sm:text-lg">
+                {requestType === 'subscription' ? 'طلب اشتراك وتسجيل طفل' : 'حجز جولة تعريفية مجانية'}
+              </h3>
               <p className="text-xs text-[#89f5e7] opacity-90">{nursery.name}</p>
             </div>
           </div>
@@ -77,57 +97,159 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
 
         {/* Content */}
         <div className="p-6">
+          {/* Guest Warning: Must Login to save data */}
+          {!currentUser && !submitted && (
+            <div className="mb-4 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-2">
+              <div className="flex items-center gap-2 font-bold text-amber-800">
+                <AppIcon name="info" className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>تنبيه: أنت تتصفح كزائر بدون تسجيل</span>
+              </div>
+              <p className="leading-relaxed text-[11px] text-amber-900/90">
+                لإتمام طلب الاشتراك وحفظ بياناتك وبيانات طفلك رسمياً في قاعدة البيانات ومتابعة حالة القبول، يرجى تسجيل الدخول أو إنشاء حساب جديد.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onRequireAuth) onRequireAuth();
+                }}
+                className="w-full py-2 px-3 rounded-xl bg-[#00685f] hover:bg-[#008378] text-white font-bold text-xs shadow-xs cursor-pointer transition-all flex items-center justify-center gap-1.5"
+              >
+                <AppIcon name="person" className="w-3.5 h-3.5 text-[#89f5e7]" />
+                <span>تسجيل الدخول أو إنشاء حساب</span>
+              </button>
+            </div>
+          )}
+
           {submitted ? (
             <div className="text-center py-6 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#89f5e7]/40 text-[#00685f] mx-auto flex items-center justify-center shadow-sm">
-                <AppIcon name="check_circle" className="w-9 h-9 text-[#00685f]" filled />
+              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-xs">
+                <AppIcon name="check_circle" className="w-9 h-9 text-emerald-600" filled />
               </div>
-              <h4 className="text-xl font-bold text-[#0b1c30]">تم تأكيد موعد جولتك بنجاح!</h4>
+              <h4 className="text-xl font-black text-[#0b1c30]">
+                {requestType === 'subscription' ? 'تم استلام طلب اشتراكك وحفظه في الداتابيز!' : 'تم تأكيد موعد جولتك بنجاح!'}
+              </h4>
               <p className="text-xs sm:text-sm text-[#3d4947] max-w-sm mx-auto leading-relaxed">
-                يسعد طاقم <strong className="text-[#00685f]">{nursery.name}</strong> باستقبالك يوم{' '}
-                <strong className="text-[#0b1c30]">{selectedDate}</strong> في تمام الساعة{' '}
-                <strong className="text-[#0b1c30]">{selectedSlot}</strong>.
+                تم حفظ بياناتك في قاعدة البيانات المركزية لروضة{' '}
+                <strong className="text-[#00685f]">{nursery.name}</strong> وسيتم التواصل معك على الرقم المسجل{' '}
+                <strong className="text-[#0b1c30] font-mono">{parentPhone}</strong> لإكمال إجراءات القبول.
               </p>
-              <div className="bg-[#eff4ff] p-3.5 rounded-2xl text-xs text-[#3d4947] text-right space-y-1 border border-[#e5eeff]">
+
+              <div className="bg-[#eff4ff] p-4 rounded-2xl text-xs text-[#3d4947] text-right space-y-1.5 border border-[#e5eeff]">
                 <div className="flex justify-between">
-                  <span className="text-[#6d7a77]">رقم تأكيد الزيارة:</span>
-                  <span className="font-bold text-[#00685f]">RD-{Math.floor(100000 + Math.random() * 900000)}</span>
+                  <span className="text-[#6d7a77]">رقم الطلب المسجل:</span>
+                  <span className="font-bold text-[#00685f] font-mono">
+                    SUB-{Math.floor(100000 + Math.random() * 900000)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#6d7a77]">الموقع:</span>
-                  <span className="font-bold">{nursery.cityName} - {nursery.district}</span>
+                  <span className="text-[#6d7a77]">الروضة:</span>
+                  <span className="font-bold">{nursery.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#6d7a77]">رقم التواصل للحضانة:</span>
-                  <span className="font-bold text-[#855300]">{nursery.phone || '0501234567'}</span>
+                  <span className="text-[#6d7a77]">نوع الطلب:</span>
+                  <span className="font-bold text-emerald-700">
+                    {requestType === 'subscription' ? 'طلب اشتراك رسمي' : 'حجز زيارة مجانية'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#6d7a77]">حالة التخزين:</span>
+                  <span className="font-bold text-emerald-700">✓ محفوظة في قاعدة البيانات (Firestore)</span>
                 </div>
               </div>
-              <p className="text-[11px] text-[#6d7a77]">
-                تم إرسال رسالة نصية SMS ورابط الموقع الجغرافي إلى جوالك: {parentPhone}
-              </p>
+
               <button
                 onClick={handleReset}
                 className="w-full py-3 rounded-2xl bg-[#00685f] text-white font-bold text-sm shadow-md cursor-pointer hover:bg-[#008378] transition-colors"
               >
-                تم، شكراً لكم
+                تم، العودة للصفحة العامة
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Type Switcher */}
+              <div className="flex bg-[#eff4ff] p-1 rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setRequestType('subscription')}
+                  className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                    requestType === 'subscription'
+                      ? 'bg-[#00685f] text-white shadow-xs'
+                      : 'text-[#6d7a77] hover:text-[#0b1c30]'
+                  }`}
+                >
+                  🎓 طلب اشتراك وتسجيل طفل
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRequestType('tour')}
+                  className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                    requestType === 'tour'
+                      ? 'bg-[#00685f] text-white shadow-xs'
+                      : 'text-[#6d7a77] hover:text-[#0b1c30]'
+                  }`}
+                >
+                  👁️ حجز جولة تعريفية أولاً
+                </button>
+              </div>
+
+              {/* Nursery Summary Box */}
               <div className="bg-[#eff4ff] p-3 rounded-2xl flex items-center gap-3">
                 <img
                   src={nursery.image}
                   alt={nursery.name}
-                  className="w-14 h-14 rounded-xl object-cover shrink-0"
+                  className="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-200"
                 />
                 <div className="text-xs">
                   <span className="font-bold text-[#0b1c30] block">{nursery.name}</span>
                   <span className="text-[#6d7a77]">{nursery.cityName}، {nursery.district}</span>
-                  <span className="text-[#00685f] font-semibold block mt-0.5">
-                    زيارة بدون أي رسوم أو التزامات
+                  <span className="text-[#00685f] font-bold block mt-0.5">
+                    الرسوم: {nursery.price} ر.س / شهرياً
                   </span>
                 </div>
               </div>
+
+              {/* Subscription Plan if requestType is subscription */}
+              {requestType === 'subscription' && (
+                <div>
+                  <label className="block text-xs font-bold text-[#3d4947] mb-1">مدة الاشتراك المطلوبة:</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setPlanDuration('monthly')}
+                      className={`p-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                        planDuration === 'monthly'
+                          ? 'bg-[#00685f] text-white border-[#00685f]'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      شهري ({nursery.price} ر.س)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPlanDuration('term')}
+                      className={`p-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                        planDuration === 'term'
+                          ? 'bg-[#00685f] text-white border-[#00685f]'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      فصلي (3 أشهر)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPlanDuration('yearly')}
+                      className={`p-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                        planDuration === 'yearly'
+                          ? 'bg-[#fea619] text-[#684000] border-[#fea619]'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      سنوي (خصم 15%)
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Form Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -143,7 +265,7 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-[#3d4947] mb-1">رقم الجوال *</label>
+                  <label className="block text-xs font-bold text-[#3d4947] mb-1">رقم الجوال للتواصل *</label>
                   <input
                     type="tel"
                     required
@@ -157,76 +279,60 @@ export const BookingTourModal: React.FC<BookingTourModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#3d4947] mb-1">عمر الطفل</label>
+                  <label className="block text-xs font-bold text-[#3d4947] mb-1">عمر الطفل *</label>
                   <select
                     value={childAge}
                     onChange={(e) => setChildAge(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#eff4ff] text-xs text-[#0b1c30] outline-none cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#eff4ff] border border-transparent focus:border-[#00685f] focus:bg-white text-xs text-[#0b1c30] outline-none transition-all cursor-pointer"
                   >
                     <option value="أقل من سنة (رضيع)">أقل من سنة (رضيع)</option>
                     <option value="1 - 2 سنة">1 - 2 سنة</option>
                     <option value="2 - 3 سنوات">2 - 3 سنوات</option>
-                    <option value="3 - 5 سنوات (تمهيدي)">3 - 5 سنوات (تمهيدي)</option>
+                    <option value="3 - 4 سنوات (تمهيدي)">3 - 4 سنوات (تمهيدي)</option>
+                    <option value="4 - 5 سنوات (روضة)">4 - 5 سنوات (روضة)</option>
                   </select>
                 </div>
+
                 <div>
-                  <label className="block text-xs font-bold text-[#3d4947] mb-1">تاريخ الزيارة المفضل</label>
+                  <label className="block text-xs font-bold text-[#3d4947] mb-1">
+                    {requestType === 'subscription' ? 'تاريخ بدء الاشتراك المتوقع' : 'تاريخ الزيارة المقترح'}
+                  </label>
                   <input
                     type="date"
+                    required
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#eff4ff] text-xs text-[#0b1c30] outline-none cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#eff4ff] border border-transparent focus:border-[#00685f] focus:bg-white text-xs text-[#0b1c30] outline-none transition-all"
                   />
                 </div>
               </div>
 
-              {/* Time Slots */}
               <div>
-                <label className="block text-xs font-bold text-[#3d4947] mb-1">وقت الزيارة المناسب</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {['09:00 صباحاً', '10:30 صباحاً', '12:00 ظهراً', '04:00 عصراً', '05:30 مساءً'].map((slot) => (
-                    <button
-                      key={slot}
-                      type="button"
-                      onClick={() => setSelectedSlot(slot)}
-                      className={`py-2 px-2 text-center text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
-                        selectedSlot === slot
-                          ? 'bg-[#00685f] text-white border-[#00685f] shadow-xs'
-                          : 'bg-[#eff4ff] text-[#3d4947] border-transparent hover:bg-[#e5eeff]'
-                      }`}
-                    >
-                      {slot}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#3d4947] mb-1">ملاحظات أو أسئلة خاصة (اختياري)</label>
+                <label className="block text-xs font-bold text-[#3d4947] mb-1">ملاحظات إضافية أو استفسارات</label>
                 <textarea
                   rows={2}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="مثال: الاستفسار عن برامج الحساسية الغذائية أو كاميرات البث..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#eff4ff] text-xs text-[#0b1c30] outline-none resize-none"
+                  placeholder="أي معلومات هامة عن الطفل، احتياجات خاصة، أو أوقات دوام مفضلة..."
+                  className="w-full px-3.5 py-2 rounded-xl bg-[#eff4ff] border border-transparent focus:border-[#00685f] focus:bg-white text-xs text-[#0b1c30] outline-none transition-all resize-none"
                 />
               </div>
 
-              <div className="pt-2 flex items-center gap-3">
-                <button
-                  type="submit"
-                  className="flex-1 py-3 bg-[#fea619] hover:bg-[#ffb95f] text-[#684000] font-bold text-sm rounded-2xl shadow-md transition-all cursor-pointer active:scale-95"
-                >
-                  تأكيد حجز الزيارة المجانية
-                </button>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-4 py-3 bg-[#eff4ff] text-[#3d4947] hover:bg-[#e5eeff] font-bold text-xs rounded-2xl cursor-pointer"
-                >
-                  إلغاء
-                </button>
-              </div>
+              {/* Submit CTA */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3.5 rounded-2xl bg-[#00685f] hover:bg-[#008378] text-white font-extrabold text-xs sm:text-sm shadow-md cursor-pointer transition-all active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <AppIcon name="send" className="w-4 h-4 text-[#89f5e7]" />
+                <span>
+                  {isSubmitting
+                    ? 'جاري حفظ البيانات في الداتابيز...'
+                    : requestType === 'subscription'
+                    ? 'تأكيد طلب الاشتراك وحفظه في الداتابيز'
+                    : 'تأكيد حجز الجولة وحفظ البيانات'}
+                </span>
+              </button>
             </form>
           )}
         </div>

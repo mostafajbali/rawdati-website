@@ -148,6 +148,24 @@ export async function syncUserProfile(user: FirebaseUser, defaultRole: UserRole 
   }
 }
 
+// Explicit User Registration Saver (Saves user to Firestore Database)
+export async function saveUserRegistrationToDb(user: UserProfile): Promise<void> {
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    await setDoc(userRef, {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      phone: user.phone || '',
+      role: user.role,
+      createdAt: user.createdAt || new Date().toISOString()
+    }, { merge: true });
+    console.log('Saved user registration successfully to Firestore:', user.email);
+  } catch (err) {
+    console.warn('Saving user to Firestore locally fallback:', err);
+  }
+}
+
 // 1. Submit Nursery Registration Request (Owner)
 // Constraint: Status is ALWAYS 'pending'. The owner CANNOT approve their own nursery!
 export async function submitNurseryRegistration(

@@ -55,7 +55,27 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
 
     const email = loginEmail.trim().toLowerCase();
     if (!email) {
-      setErrorMsg('يرجى إدخال البريد الإلكتروني');
+      setErrorMsg('يرجى إدخال البريد الإلكتروني أو اسم المستخدم');
+      return;
+    }
+
+    // Check if logging in as Admin:
+    if (email === 'admin' || email === 'admin@rawdati.sa' || email === 'mostafaaljabaly9@gmail.com') {
+      if (loginPassword && loginPassword !== 'admin123') {
+        setErrorMsg('كلمة المرور غير صحيحة لحساب المشرف (الافتراضية: admin123)');
+        return;
+      }
+      setSuccessMsg('أهلاً بك أيها المشرف العام! جاري نقلك مباشرة إلى لوحة تحكم المشرف...');
+      setTimeout(() => {
+        onUserLoginSuccess({
+          uid: 'admin-master',
+          email: email === 'admin' ? 'admin@rawdati.sa' : email,
+          displayName: 'مدير المنصة الرئيسي (Admin)',
+          role: 'admin'
+        });
+        onClose();
+        setSuccessMsg(null);
+      }, 500);
       return;
     }
 
@@ -78,11 +98,11 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
       role: resolvedRole
     });
 
-    setSuccessMsg('تم تسجيل الدخول بنجاح! أهلاً بك في روضتي.');
+    setSuccessMsg('تم تسجيل الدخول بنجاح! جاري نقلك لصفحة المستخدمين...');
     setTimeout(() => {
       onClose();
       setSuccessMsg(null);
-    }, 1000);
+    }, 600);
   };
 
   // Handle new user registration ("اذا كان مش مسجل يسجل بعدين بيدخل")
@@ -281,13 +301,14 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                     setActiveTab('login');
                     setErrorMsg(null);
                   }}
-                  className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                  className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                     activeTab === 'login'
                       ? 'bg-white text-[#00685f] shadow-xs'
                       : 'text-[#6d7a77] hover:text-[#0b1c30]'
                   }`}
                 >
-                  تسجيل الدخول (حساب مسجل)
+                  <AppIcon name="login" className="w-3.5 h-3.5" />
+                  <span>تسجيل الدخول</span>
                 </button>
                 <button
                   type="button"
@@ -295,13 +316,14 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                     setActiveTab('register');
                     setErrorMsg(null);
                   }}
-                  className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                  className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                     activeTab === 'register'
                       ? 'bg-white text-[#00685f] shadow-xs'
                       : 'text-[#6d7a77] hover:text-[#0b1c30]'
                   }`}
                 >
-                  إنشاء حساب جديد (تسجيل)
+                  <AppIcon name="person_add" className="w-3.5 h-3.5" />
+                  <span>إنشاء حساب</span>
                 </button>
               </div>
 
@@ -314,16 +336,16 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
 
                   <div>
                     <label className="block text-xs font-bold text-[#3d4947] mb-1">
-                      البريد الإلكتروني
+                      البريد الإلكتروني أو اسم المستخدم
                     </label>
                     <div className="flex items-center gap-2 bg-[#eff4ff] rounded-xl px-3 py-2 border border-transparent focus-within:border-[#00685f] focus-within:bg-white transition-all">
-                      <AppIcon name="mail" className="w-4 h-4 text-[#00685f]" />
+                      <AppIcon name="person" className="w-4 h-4 text-[#00685f]" />
                       <input
-                        type="email"
+                        type="text"
                         required
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
-                        placeholder="your-name@example.com"
+                        placeholder="admin أو بريدك الإلكتروني"
                         className="w-full bg-transparent text-xs text-[#0b1c30] outline-none"
                       />
                     </div>
@@ -399,27 +421,27 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                       />
                       <path
                         fill="#EA4335"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                       />
                     </svg>
                     <span>الدخول بحساب Google</span>
                   </button>
 
-                  {/* Fast demo login options */}
-                  <div className="pt-2 flex gap-2">
+                  {/* Fast demo login options for users */}
+                  <div className="pt-2 grid grid-cols-2 gap-2 text-center">
                     <button
                       type="button"
                       onClick={handleQuickParent}
-                      className="flex-1 py-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded-lg cursor-pointer transition-all"
+                      className="py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer transition-all flex items-center justify-center gap-1.5"
                     >
-                      دخول تجريبي (ولي أمر)
+                      <span>👨‍👩‍👧 تجربة كـ ولي أمر</span>
                     </button>
                     <button
                       type="button"
                       onClick={handleQuickOwner}
-                      className="flex-1 py-1.5 px-2 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-bold rounded-lg border border-amber-200 cursor-pointer transition-all"
+                      className="py-2 px-2 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-xl border border-amber-200 cursor-pointer transition-all flex items-center justify-center gap-1.5"
                     >
-                      دخول تجريبي (مالك حضانة)
+                      <span>🏫 تجربة كـ مالك حضانة</span>
                     </button>
                   </div>
                 </form>
@@ -530,8 +552,8 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                     type="submit"
                     className="w-full py-3 rounded-xl bg-[#00685f] hover:bg-[#008378] text-white font-extrabold text-xs shadow-md transition-all cursor-pointer active:scale-98 flex items-center justify-center gap-2 mt-2"
                   >
-                    <AppIcon name="how_to_reg" className="w-4 h-4 text-[#89f5e7]" />
-                    <span>إنشاء الحساب والتسجيل والدخول فوراً</span>
+                    <AppIcon name="person_add" className="w-4 h-4 text-[#89f5e7]" />
+                    <span>إنشاء حساب</span>
                   </button>
                 </form>
               )}

@@ -77,20 +77,23 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
   const handleLoginFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
-    if (!adminEmail.trim()) {
-      setLoginError('يرجى كتابة البريد الإلكتروني للمشرف');
+    const emailVal = adminEmail.trim().toLowerCase();
+    const passVal = adminPassword.trim();
+
+    if (!emailVal) {
+      setLoginError('يرجى كتابة اسم المستخدم أو البريد الإلكتروني للمشرف');
       return;
     }
-    const success = onAdminLogin(adminEmail.trim());
-    if (!success) {
-      setLoginError('بيانات الدخول غير صحيحة أو ليس لديك صلاحية المشرف العام.');
-    }
-  };
 
-  const handleQuickDemoAdmin = () => {
-    setAdminEmail('admin@rawdati.sa');
-    setAdminPassword('admin123');
-    onAdminLogin('admin@rawdati.sa');
+    if (passVal !== 'admin123' && passVal.length < 4) {
+      setLoginError('كلمة المرور غير صحيحة');
+      return;
+    }
+
+    const success = onAdminLogin(emailVal);
+    if (!success) {
+      setLoginError('بيانات الدخول غير صحيحة. يرجى التأكد من اسم المستخدم وكلمة المرور.');
+    }
   };
 
   // Filtered Users
@@ -163,16 +166,16 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
             <form onSubmit={handleLoginFormSubmit} className="space-y-4 relative z-10">
               <div>
                 <label className="block text-xs font-bold text-slate-200 mb-1.5">
-                  البريد الإلكتروني للمشرف
+                  اسم المستخدم أو البريد الإلكتروني للمشرف
                 </label>
                 <div className="flex items-center gap-2 bg-black/20 border border-white/20 rounded-xl px-3 py-2.5 focus-within:border-[#89f5e7] focus-within:bg-black/30 transition-all">
-                  <AppIcon name="mail" className="w-4 h-4 text-[#89f5e7]" />
+                  <AppIcon name="person" className="w-4 h-4 text-[#89f5e7]" />
                   <input
-                    type="email"
+                    type="text"
                     required
                     value={adminEmail}
                     onChange={(e) => setAdminEmail(e.target.value)}
-                    placeholder="admin@rawdati.sa أو بريدك الإداري"
+                    placeholder="اسم المستخدم أو البريد"
                     className="w-full bg-transparent text-sm text-white placeholder:text-slate-400 outline-none"
                   />
                 </div>
@@ -203,20 +206,6 @@ export const AdminPortalPage: React.FC<AdminPortalPageProps> = ({
                 <span>دخول لوحة تحكم المشرف</span>
               </button>
             </form>
-
-            {/* Quick Demo Access */}
-            <div className="mt-6 pt-5 border-t border-white/10 relative z-10 text-center">
-              <span className="text-[11px] text-slate-400 block mb-2 font-medium">
-                للتجربة السريعة واختبار صلاحيات الأدمن مباشرة:
-              </span>
-              <button
-                type="button"
-                onClick={handleQuickDemoAdmin}
-                className="w-full py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-[#89f5e7] border border-[#89f5e7]/30 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <span>⚡ تسجيل دخول فوري كأدمن (admin@rawdati.sa)</span>
-              </button>
-            </div>
           </div>
         </main>
 

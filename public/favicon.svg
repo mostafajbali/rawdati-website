@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Gentle Warm Sunrise Gradient for Kindergarten Sun -->
+    <linearGradient id="favSunGrad" x1="16" y1="8" x2="48" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffb95f" />
+      <stop offset="60%" stop-color="#fea619" />
+      <stop offset="100%" stop-color="#f58e0b" />
+    </linearGradient>
+
+    <!-- Botanical Teal Gradient for Sprout (Mother / Educator) -->
+    <linearGradient id="favSproutGrad" x1="18" y1="26" x2="46" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00a396" />
+      <stop offset="50%" stop-color="#008378" />
+      <stop offset="100%" stop-color="#005850" />
+    </linearGradient>
+
+    <!-- Soft Mint Fresh Leaf Gradient (Child) -->
+    <linearGradient id="favMintLeafGrad" x1="28" y1="20" x2="48" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#71f8e4" />
+      <stop offset="100%" stop-color="#008378" />
+    </linearGradient>
+
+    <!-- Soft Blushing Cheeks Radial Gradient -->
+    <radialGradient id="favBlushGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7b72" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#ff9a8b" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Drop shadow for depth on any browser theme -->
+    <filter id="favDropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#005850" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- Clean rounded container badge so the icon looks stunning in both light and dark browser tab bars -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="#ffffff" stroke="#dcfce7" stroke-width="2" />
+
+  <g filter="url(#favDropShadow)">
+    <!-- 1. Playful Radiant Sun Rays -->
+    <g stroke="#fea619" stroke-width="2.6" stroke-linecap="round" opacity="0.95">
+      <line x1="32" y1="5.5" x2="32" y2="9.5" />
+      <line x1="46.5" y1="10.5" x2="43.5" y2="13.5" />
+      <line x1="17.5" y1="10.5" x2="20.5" y2="13.5" />
+      <line x1="53.5" y1="22" x2="49.5" y2="23" />
+      <line x1="10.5" y1="22" x2="14.5" y2="23" />
+    </g>
+
+    <!-- 2. Warm Glowing Sun Body -->
+    <circle cx="32" cy="22.5" r="13" fill="url(#favSunGrad)" />
+
+    <!-- 3. Cute Blushing Cheeks -->
+    <circle cx="24.5" cy="25" r="2.8" fill="url(#favBlushGrad)" />
+    <circle cx="39.5" cy="25" r="2.8" fill="url(#favBlushGrad)" />
+
+    <!-- 4. Cheerful Twinkling Eyes with Highlights -->
+    <g fill="#4e2c00">
+      <circle cx="27" cy="21.2" r="1.6" />
+      <circle cx="37" cy="21.2" r="1.6" />
+    </g>
+    <!-- Eye Highlights -->
+    <circle cx="26.3" cy="20.5" r="0.6" fill="#ffffff" />
+    <circle cx="36.3" cy="20.5" r="0.6" fill="#ffffff" />
+
+    <!-- 5. Sweet Kindergarten Smile -->
+    <path d="M29 24.2C30 26.2 34 26.2 35 24.2" stroke="#4e2c00" stroke-width="1.6" stroke-linecap="round" />
+
+    <!-- 6. Nurturing Sprout Leaves (Kindergarten & Child) -->
+    <!-- Left Leaf -->
+    <path d="M32 46C23 46 16.5 38 18.8 28C26.5 28 32 36 32 46Z" fill="url(#favSproutGrad)" />
+
+    <!-- Right Leaf -->
+    <path d="M32 44C40 44 47 36 45 26C37.5 26 32 34 32 44Z" fill="url(#favMintLeafGrad)" />
+
+    <!-- Center Stem -->
+    <path d="M32 36C31.2 40 30.5 47 32 57" stroke="url(#favSproutGrad)" stroke-width="3.2" stroke-linecap="round" />
+
+    <!-- Little Golden Heart in Center -->
+    <path d="M32 37.5C31.2 36.2 29 36.6 29.4 38.3C29.8 39.6 32 41.5 32 41.5C32 41.5 34.2 39.6 34.6 38.3C35 36.6 32.8 36.2 32 37.5Z" fill="#fea619" />
+
+    <!-- Sparkle Star -->
+    <path d="M47.5 7.5L48.3 9.7L50.5 10.5L48.3 11.3L47.5 13.5L46.7 11.3L44.5 10.5L46.7 9.7L47.5 7.5Z" fill="#fea619" />
+  </g>
+</svg>
